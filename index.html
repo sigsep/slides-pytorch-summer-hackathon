@@ -1,0 +1,1638 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Deep learning for music separation</title>
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/lirmm.css">
+ 		<link href="fontawesome-free-5.3.1-web/css/all.css" rel="stylesheet">
+		<!-- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous"> -->
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/github.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+				<section id="cover" data-background="css/theme/img/background-red.jpg" data-background-repeat="no-repeat" data-background-size="cover" data-background-position="0 0" data-state="no-title-footer no-progressbar has-dark-background">
+					<h2 id="covertitle">Deep learning for music separation</h2>
+					<p id="coverauthors">
+						Fabian-Robert Stöter & Antoine Liutkus<br/>
+						Inria and LIRMM, Montpellier<br/>
+
+						<p>
+							fabian-robert.stoter@inria.fr<br />
+							<i class="fab fa-twitter"></i>faroit
+						</p>
+						<p>
+							antoine.liutkus@inria.fr<br />
+						</p>
+
+					</p>
+					<p>
+					September 2nd, 2019
+					</p>
+					<p>
+					<img src="css/theme/img/inria-cover.svg" id="inria" class="logo" alt="">
+				</section>
+
+
+<!-- Introduction
+
+In an introductory section, we will motivate the tutorial by explaining how music separation with DNN emerged with
+data-driven methods coming from machine-learning or image processing communities. This comes with machine-learning
+tricks to make methods work in practice. Meanwhile, many audio processing good practices are often forgotten or not
+correctly applied, although they are mandatory for good performance.
+• Timeline for DNN music separation
+A brief history of the topic in the bigger picture: machine learning on the one hand, source separation on the other
+hand.
+• Outline
+The baseline system: what is the state of the art? Quick literature review
+How to implement and make it work? The distinction between training and testing.
+An audio demo of the critical impact of engineering for the “same” system.
+
+-->
+
+<!-- INTRODUCTION -->
+<section>
+	<h1>Music Unmixing/Separation</h1>
+	<img width="45%" style="float:left" src="assets/intro1.png" alt="">
+	<img class="fragment" width="45%" src="assets/intro2.png" alt="">
+</section>
+
+<section>
+	<h1>Applications</h1>
+	<img width="60%" style="float:right" src="assets/karaoke.jpg" alt="">
+
+	<ul>
+		<li>Automatic Karaoke</li>
+		<li>Creative Music Production</li>
+		<li>Active listening</li>
+		<li>Upmixing (stereo $\Rightarrow$ 5.1)</li>
+		<li>Music Education</li>
+		<li>Pre-processing for MIR</li>
+	</ul>
+	<i style="float:right; margin-top:50%;" class="fa fa-headphones"></i>
+</section>
+
+<!-- <section>
+	<iframe class="stretch" data-src="audio/player_x.html"></iframe>
+</section> -->
+
+<section>
+	<h1>Motivations</h1>
+	<ul>
+		<li>Intense past research
+		<ul>
+			<li>Many evaluation campaigns: MIREX, SiSEC</li>
+			<li>Recent breakthroughs: <strong>separation works</strong></li>
+		</ul>
+		<li>Difficult topic
+		<ul>
+			<li>Signal processing skills</li>
+			<li>Deep learning experience</li>
+		</ul>
+		</li>
+		<li>Objectives of this tutorial
+		<ul>
+			<li>Basics of DNN, basics of signal processing</li>
+			<li>Understand an open-source state of the art system</li>
+			<li>Implement it!</li>
+		</ul>
+	</ul>
+	<img width="30%" style="float:right; margin-top:30%;" src="assets/stefanyuki.svg" alt="">
+		<p style="margin-top:15%;">
+			<a href="sigsep.github.io/tutorials">sigsep.github.io/tutorials</a>
+</section>
+
+<section>
+	<h1>Tutorial general outline</h1>
+	<ul>
+		<li>Signal processing basics</li>
+		<li>A brief history of separation</li>
+		<li>Evaluation and datasets</li>
+		<li>A starter on deep neural networks</li>
+		<li>An introduction to training</li>
+		<li>The `Open-unmix` baseline model</li>
+		<li>Training tricks</l1>
+		<li>Testing tricks</li>
+		<li>Conclusion</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Signal processing</h1>
+	<h2>Time-frequency representations</h2>
+</section>
+
+<section data-background-transition="none" data-state="no-title-footer"  data-background-image="assets/demotrack/mix.jpg">
+	<!-- <h1><button data-audio="assets/demotrack/mixture.m4a">▶</button></h1> -->
+	<h1 style="margin-top:5%; color:white">Mixture spectrogram</h1>
+</section>
+<section data-background-transition="none">
+	<section data-background-transition="none" data-state="no-title-footer"  data-background-image="assets/demotrack/vocals.jpg">
+		<!-- <h1><button data-audio="assets/demotrack/vocals.m4a">▶</button></h1> -->
+		<h1 style="margin-top:5%; color:white">Vocals spectrogram</h1>
+	</section>
+	<section data-background-transition="none" data-state="no-title-footer"  data-background-image="assets/demotrack/drums.jpg">
+		<!-- <h1><button data-audio="assets/demotrack/drums.m4a">▶</button></h1> -->
+		<h1 style="margin-top:5%; color:white">Drums spectrogram</h1>
+	</section>
+	<section data-background-transition="none" data-state="no-title-footer"  data-background-image="assets/demotrack/bass.jpg">
+		<!-- <h1><button data-audio="assets/demotrack/bass.m4a">▶</button></h1> -->
+		<h1 style="margin-top:5%; color:white">Bass spectrogram</h1>
+	</section>
+</section>
+
+<section>
+	<h1>Signal processing</h1>
+	<div class="practice">
+		<h2>Hands on</h2>
+		<ul>
+			<li>Start the notebook session</li>
+			<li>For one track, display waveforms, play some audio</li>
+			<li>Display spectrogram of mixture</li>
+		</ul>
+	</div>
+</section>
+
+<section>
+	<h2>Spectral analysis as pre-whitening</h2>
+	<img style="float:right" width="50%" src="assets/fourier_whitening.svg" alt="">
+	<ul>
+		<li>Frames too short: not diagonalized</li>
+		<li>Frames too long: not stationary</li>
+	</ul>
+</section>
+
+<section>
+	<!-- <h1>Time-frequency representations</h1> -->
+	<h2>Spectral analysis as pre-whitening</h2>
+	<img width="90%" src="assets/STFT.gif" alt="">
+</section>
+
+<section>
+	<h1>Filtering</h1>
+	<h2>Hands on</h2>
+	<ul class="practice">
+	<li>Get spectrograms of the sources</li>
+	<li>Display the corresponding soft-mask for vocals</li>
+	<li>Apply it on the mixture, reconstruct and listen to the result</li>
+</section>
+
+<section>
+	<section>
+		<h1>Filtering</h1>
+		<img width="75%" src="assets/soft_masking_1.svg" alt="">
+	</section>
+	<section transition='none'>
+		<h1>Filtering</h1>
+		<img width="75%" src="assets/soft_masking_2.svg" alt="">
+	</section>
+	<section transition='none'>
+		<h1>Filtering</h1>
+		<img width="75%" src="assets/soft_masking_3.svg" alt="">
+	</section>
+	<section transition='none'>
+		<h1>Filtering</h1>
+		<img width="75%" src="assets/soft_masking_4.svg" alt="">
+	</section>
+	<section data-transition="none">
+		<h1>Filtering</h1>
+		<img width="75%" src="assets/soft_masking_5.svg" alt="">
+		<img class="fragment" style="float:right" width="100%" src="assets/soft_masking_formula_potatoes.svg" alt="">
+	</section>
+	<section transition='none'>
+		<h1>Filtering</h1>
+		<img width="75%" src="assets/soft_masking_4.svg" alt="">
+		<img style="float:right" width="100%" src="assets/soft_masking_formula.svg" alt="">
+	</section>
+</section>
+
+<section>
+	<h1>A brief history of separation</h1>
+	<h2>The big picture</h2>
+	<div class="centered">
+		<img width="90%" class="stretch" src="assets/discriminative_big_picture.svg" alt="">
+	</div>
+	<h6 style="margin-top:4%; color:gray">
+	Rafii, Zafar, et al. "An Overview of Lead and Accompaniment Separation in Music."
+	IEEE/ACM Transactions on Audio, Speech and Language Processing (TASLP) 26.8 (2018): 1307-1335.
+	</h6>
+</section>
+
+<section>
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Harmonicity for the lead</h2>
+		<img style="float:right" width="70%" src="assets/model_based/ReviewPaper_ Figure2.svg" alt="">
+		<ul>
+			<li>Pitch detection</li>
+			<li>Clean voices</li>
+			<li>"Metallic" artifacts</li>
+		</ul>
+		<!-- an example -->
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Redundancy for the accompaniment: NMF</h2>
+		<img style="float:right" width="41%" src="assets/model_based/ReviewPaper_ Figure3.svg" alt="">
+		<ul>
+			<li>Spectral templates</li>
+			<li>Low-rank assumptions</li>
+			<li>Bad generalization</li>
+		</ul>
+		<!-- an example -->
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Redundancy for the accompaniment: RPCA</h2>
+		<p>
+		<img style="margin-top:4%;" width="90%" src="assets/model_based/ReviewPaper_ Figure4.svg" alt=""><p>
+		<ul>
+			<li>Low-rank for music</li>
+			<li>Vocals as unstructured</li>
+			<li>Strong interferences in general</li>
+		</ul>
+		<!-- an example -->
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Redundancy for the accompaniment: REPET</h2>
+		<img style="float:right; margin-top:4%" width="65%" src="assets/model_based/ReviewPaper_ Figure5.svg" alt="">
+		<ul>
+			<li>Repetitive music</li>
+			<li>Non-repetitive vocals</li>
+			<li>Solos in vocals</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2> Modeling both lead and accompaniment: source filter</h2>
+		<img style="float:right" width="70%" src="assets/model_based/ReviewPaper_ Figure7.svg" alt="">
+		<ul>
+			<li>Harmonic vocals</li>
+			<li>Low-rank music</li>
+			<li>Poor generalization</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<img style="float:right" width="45%" src="assets/model_based/ReviewPaper_ Figure8.svg" alt="">
+		<h2>Cascaded methods</h2>
+		<ul>
+			<li>Combining methods</li>
+			<li>Handcrafted systems</li>
+			<li>Poor generalization</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Fusion of methods</h2>
+		<img style="float:right" width="49%" src="assets/model_based/ReviewPaper_ Figure9.svg" alt="">
+		<ul>
+			<li>Combining in a data-driven way</li>
+			<li>Doing best than all</li>
+			<li>Computationally demanding</li>
+		</ul>
+	</section>
+</section>
+
+
+<!-- DATASETS AND EVALUATION
+<section>
+	<h1>Introduction</h1>
+	<h2>Datasets and evaluation</h2>
+</section>-->
+
+<section>
+	<h1>Music separation datasets</h1>
+	<table>
+	   <thead>
+	      <tr>
+	         <th><strong>Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></th>
+	         <th><strong>Year</strong></th>
+	         <th><strong>Reference&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></th>
+	         <th><strong>#Tracks</strong></th>
+	         <th><strong>Tracks&nbsp;dur&nbsp;(s)	</strong></th>
+	         <th><strong>Full/stereo?</strong></th>
+					 <th><strong>Total&nbsp;length</strong></th>
+	      </tr>
+	   </thead>
+	   <tbody>
+	      <tr>
+	         <td>
+	            <a href="http://www.mtg.upf.edu/download/datasets/mass" target="_blank" rel="noopener noreferrer">
+	               MASS
+	               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound">
+	                  <path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+	                  <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+	               </svg>
+	            </a>
+	         </td>
+	         <td>2008</td>
+	         <td>(Vinyes)</td>
+	         <td>9</td>
+	         <td>
+	            (16
+	            <span class="katex">
+	               <span class="katex-mathml">
+	                  <math>
+	                     <semantics>
+	                        <mrow>
+	                           <mo>±</mo>
+	                        </mrow>
+	                        <annotation encoding="application/x-tex">\pm</annotation>
+	                     </semantics>
+	                  </math>
+	               </span>
+	               <span aria-hidden="true" class="katex-html"><span class="strut" style="height: 0.58333em;"></span><span class="strut bottom" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="base"><span class="mord">±</span></span></span>
+	            </span>
+	            7)
+	         </td>
+	         <td>❌ / ✔️</td>
+					 <td>2m24s</td>
+	      </tr>
+	      <tr>
+	         <td>
+	            <a href="https://sites.google.com/site/unvoicedsoundseparation/mir-1k" target="_blank" rel="noopener noreferrer">
+	               MIR-1K
+	               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound">
+	                  <path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+	                  <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+	               </svg>
+	            </a>
+	         </td>
+	         <td>2010</td>
+	         <td>(Hsu and Jang)</td>
+	         <td>1,000</td>
+	         <td>8 <span class="katex"><span class="katex-mathml"></td>
+	         <td>❌ / ❌</td>
+					 <td>2h13m20s</td>
+	      </tr>
+	      <tr>
+	         <td>
+	            <a href="http://www.tsi.telecom-paristech.fr/aao/en/2012/03/12/quasi/" target="_blank" rel="noopener noreferrer">
+	               QUASI
+	               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound">
+	                  <path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+	                  <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+	               </svg>
+	            </a>
+	         </td>
+	         <td>2011</td>
+	         <td>(Liutkus et al.)</td>
+	         <td>5</td>
+	         <td>
+	            (206
+	            <span class="katex">
+	               <span class="katex-mathml">
+	                  <math>
+	                     <semantics>
+	                        <mrow>
+	                           <mo>±</mo>
+	                        </mrow>
+	                        <annotation encoding="application/x-tex">\pm</annotation>
+	                     </semantics>
+	                  </math>
+	               </span>
+	               <span aria-hidden="true" class="katex-html"><span class="strut" style="height: 0.58333em;"></span><span class="strut bottom" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="base"><span class="mord">±</span></span></span>
+	            </span>
+	            21)
+	         </td>
+	         <td>✔️ / ✔️</td>
+					 <td>17m10s</td>
+	      </tr>
+	      <tr>
+	         <td>
+	            <a href="http://www.loria.fr/~aliutkus/kam/" target="_blank" rel="noopener noreferrer">
+	               ccMixter
+	               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound">
+	                  <path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+	                  <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+	               </svg>
+	            </a>
+	         </td>
+	         <td>2014</td>
+	         <td>(Liutkus et al)</td>
+	         <td>50</td>
+	         <td>
+	            (231
+	            <span class="katex">
+	               <span class="katex-mathml">
+	                  <math>
+	                     <semantics>
+	                        <mrow>
+	                           <mo>±</mo>
+	                        </mrow>
+	                        <annotation encoding="application/x-tex">\pm</annotation>
+	                     </semantics>
+	                  </math>
+	               </span>
+	               <span aria-hidden="true" class="katex-html"><span class="strut" style="height: 0.58333em;"></span><span class="strut bottom" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="base"><span class="mord">±</span></span></span>
+	            </span>
+	            77)
+	         </td>
+	         <td>✔️ / ✔️</td>
+					 <td>3h12m30s</td>
+	      </tr>
+	      <tr>
+	         <td>
+	            <a href="http://medleydb.weebly.com/" target="_blank" rel="noopener noreferrer">
+	               MedleyDB
+	               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound">
+	                  <path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+	                  <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+	               </svg>
+	            </a>
+	         </td>
+	         <td>2014</td>
+	         <td>(Bittner et al)</td>
+	         <td>63</td>
+	         <td>
+	            (206
+	            <span class="katex">
+	               <span class="katex-mathml">
+	                  <math>
+	                     <semantics>
+	                        <mrow>
+	                           <mo>±</mo>
+	                        </mrow>
+	                        <annotation encoding="application/x-tex">\pm</annotation>
+	                     </semantics>
+	                  </math>
+	               </span>
+	               <span aria-hidden="true" class="katex-html"><span class="strut" style="height: 0.58333em;"></span><span class="strut bottom" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="base"><span class="mord">±</span></span></span>
+	            </span>
+	            121)
+	         </td>
+	         <td>✔️ / ✔️</td>
+					 <td>3h36m18s</td>
+	      </tr>
+	      <tr>
+	         <td>
+	            <a href="http://mac.citi.sinica.edu.tw/ikala/" target="_blank" rel="noopener noreferrer">
+	               iKala
+	               <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound">
+	                  <path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path>
+	                  <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon>
+	               </svg>
+	            </a>
+	         </td>
+	         <td>2015</td>
+	         <td>(Chan et al)</td>
+	         <td>206</td>
+	         <td>30</td>
+	         <td>❌ / ❌</td>
+					 <td>1h43m</td>
+	      </tr>
+	      <tr>
+	         <td><a href="/datasets/dsd100.html" class="">DSD100</a><span class="badge"></span></td>
+	         <td>2015</td>
+	         <td>(Ono et al)</td>
+	         <td>100</td>
+	         <td>
+	            (251
+	            <span class="katex">
+	               <span class="katex-mathml">
+	                  <math>
+	                     <semantics>
+	                        <mrow>
+	                           <mo>±</mo>
+	                        </mrow>
+	                        <annotation encoding="application/x-tex">\pm</annotation>
+	                     </semantics>
+	                  </math>
+	               </span>
+	               <span aria-hidden="true" class="katex-html"><span class="strut" style="height: 0.58333em;"></span><span class="strut bottom" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="base"><span class="mord">±</span></span></span>
+	            </span>
+	            60)
+	         </td>
+	         <td>✔️ / ✔️</td>
+					 <td>6h58m20s</td>
+	      </tr>
+	      <tr>
+	         <td><a href="/datasets/musdb.html" class="">MUSDB18</a></td>
+	         <td>2017</td>
+	         <td>(Rafii et al)</td>
+	         <td>150</td>
+	         <td>
+	            (236
+	            <span class="katex">
+	               <span class="katex-mathml">
+	                  <math>
+	                     <semantics>
+	                        <mrow>
+	                           <mo>±</mo>
+	                        </mrow>
+	                        <annotation encoding="application/x-tex">\pm</annotation>
+	                     </semantics>
+	                  </math>
+	               </span>
+	               <span aria-hidden="true" class="katex-html"><span class="strut" style="height: 0.58333em;"></span><span class="strut bottom" style="height: 0.66666em; vertical-align: -0.08333em;"></span><span class="base"><span class="mord">±</span></span></span>
+	            </span>
+	            95)
+	         </td>
+	         <td>✔️ / ✔️</td>
+					 <td>9h50m</td>
+	      </tr>
+	   </tbody>
+	</table>
+</section>
+
+<section>
+	<h1>The musdb18 dataset</h1>
+	<ul>
+		<li>100 train / 50 test full tracks</li>
+		<li>Mastered with pro. digital audio workstations</li>
+		<li>Parser and Evaluation tools in <i class="fab fa-python"></i></li>
+		<li><a ref=https://sigsep.github.io/datasets/musdb.html>https://sigsep.github.io/datasets/musdb.html</a></li>
+	</ul>
+	<img width="320px" style="float: right" src="assets/ni_logo.png" alt="">
+	<img width="60%" src="assets/hero.svg" alt="">
+</section>
+
+
+<section>
+	<h1>Evaluating quality</h1>
+	<h2><img width="50px"src="assets/matlab.jpg" alt="">BSSeval v3</h2>
+	All metrics in dB. The higher, the better:
+	<ul>
+		<li><strong>SDR</strong>: Source to distortion ratio. <em>Error in the estimate</em>.</li>
+		<li><strong>SIR</strong>: Source to interference ratio. <em>Presence of other sources</em>.</li>
+		<li><strong>SAR</strong>: Source to artifacts ratio. <em>Amount of artificial noise</em>.</li>
+	</ul>
+	<p>
+	<h6 style="margin-top:2%; color:gray">
+	E. Vincent et al. "Performance measurement in blind audio source separation."
+	IEEE transactions on audio, speech, and language processing 14.4 (2006): 1462-1469.
+	</h6>
+	<h2><img width="50px"src="assets/python.jpg" alt="">museval (BSSeval v4)</i></h2>
+	<ul>
+		<li><strong>Better</strong> matching filters computed track-wise </li>
+		<li><strong>Faster</strong> 10x</li>
+	</ul>
+	<h6 style="margin-top:2%; color:gray">
+	F. Stöter et al. "The 2018 Signal Separation Evaluation Campaign."
+	LVA/ICA 2018.
+	</h6>
+</section>
+
+<section>
+	<h1>Evaluating quality</h1>
+	<h2>Hands-on</h2>
+	<ul class="practice">
+		<li>Loop over some musdb tracks</li>
+		<li>Evaluate our separation system on musdb</li>
+		<li>Compare to state of the art (SiSEC18)</li>
+	</ul>
+</section>
+
+
+<!-- DEEP NEURAL NETWORKS -->
+<section>
+	<h1>A starter on deep neural networks</h1>
+	<h6 style="margin-top:50%; color:gray">
+	Y. LeCun, et al. "Deep learning". nature, 521(7553), 436 (2015).
+</h6>
+</section>
+
+<section>
+	<h1>Static data</h1>
+	<h2>The basic fully connected layer</h2>
+	<img width="80%" src="assets/one_layer.svg" alt="">
+	<img class="fragment" style="float:right" width="60%" src="assets/non_linearities.svg" alt="">
+</section>
+
+<section>
+	<h1>Static data</h1>
+	<h2>Basic fully connected network</h2>
+	<img  style="margin-top:5%" width="100%" src="assets/several_layers.svg" alt="">
+</section>
+
+<section>
+	<h1>Static data</h1>
+	<h2>A usual deep network</h2>
+	<img  style="margin-top:5%" width="100%" src="assets/several_layers_general.svg" alt="">
+	<ul class="fragment">
+		<li>Cascading linear and non-linear operations augments expressive power</li>
+		<li>7 millions parameters in our case</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Temporal data</h1>
+	<h6 style="margin-top:50%; color:gray">
+		colah's blog, <a href="http://colah.github.io/posts/2015-08-Understanding-LSTMs/">Understanding LSTM Networks</a>, 2015.
+	</h6>
+</section>
+
+<section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>From fully connected to the simple recurrent net</h2>
+		<img  style="float:center" width="90%" src="assets/recurrent_layer_1.svg" alt="">
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>From fully connected to the simple recurrent net</h2>
+		<img  style="float:center" width="90%" src="assets/recurrent_layer_2.svg" alt="">
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>From fully connected to the simple recurrent net</h2>
+		<img  style="float:center" width="90%" src="assets/time_distributed_dense.svg" alt="">
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>From fully connected to the simple recurrent net</h2>
+		<img  style="float:center" width="90%" src="assets/recurrent_layer_3.svg" alt="">
+	</section>
+
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The simple recurrent net</h2>
+		<img  style="float:left" width="24%" src="assets/recurrent_layer_4.svg" alt="">
+		<ul>
+			<li>$y_{t}=f\left(linear\left\{ x_{t},y_{t-1}\right\} \right)$</li>
+			<li>Similar to a Markov model
+				<ul>
+					<li>Exponential decay of information</li>
+					<li>Vanishing or exploding gradient for training</li>
+				</ul></li>
+		</ul>
+		<p>
+		<ul>
+			<li>Limited for long-term dependencies</li>
+		</ul>
+		<h6 style="margin-top:30%; color:gray">
+			P. Huang, et al. "Deep learning for monaural speech separation". (2014) ICASSP.
+		</h6>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The long short term memory (LSTM)</h2>
+		<img  style="margin-top:2%; float:center" width="100%" src="assets/lstm_1.svg" alt="">
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The long short term memory (LSTM)</h2>
+		<img  style="margin-top:2%; float:center" width="100%" src="assets/lstm_2.svg" alt="">
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The long short term memory (LSTM)</h2>
+		<img  style="margin-top:2%; float:center" width="80%" src="assets/lstm_3.svg" alt="">
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The bi-LSTM</h2>
+		<img  style="margin-top:2%; float:left" width="50%" src="assets/blstm_1.svg" alt="">
+		<ul>
+			<li>LSTM are causal systems</li>
+			<li>Predicts future from past</li>
+		</ul>
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The bi-LSTM</h2>
+		<img  style="margin-top:2%; float:left" width="50%" src="assets/blstm_2.svg" alt="">
+		<ul>
+			<li>We can use anti-causal LSTM</li>
+			<li>Different predictions!</li>
+		</ul>
+	</section>
+	<section>
+		<h1>Temporal data</h1>
+		<h2>The bi-LSTM</h2>
+		<img  style="margin-top:2%; float:left" width="50%" src="assets/blstm_3.svg" alt="">
+		<ul>
+			<li>Independent forward and backward</li>
+			<li>Outputs can be concatenated</li>
+			<li class="fragment">Outputs can be summed<p>
+			<img  style="margin-top:2%; float:center" width="100%" src="assets/combine_blstm.svg" alt="">
+		</li>
+		</ul>
+	</section>
+
+</section>
+
+<section>
+	<h1>A naive recurrent net for separation</h1>
+	<img width="48%" style="margin-top:5%; float:left" src="assets/vanilla_lstm.svg" alt="">
+	<img width="20%" style="float:left" src="assets/vanilla.svg" alt="">
+	<ul style="margin-top:5%;">
+		<li>One LSTM</li>
+		<li>One fully connected</li>
+		<li>6 million parameters</li>
+	</ul>
+	<p>
+	<ul class="practice">
+		<li>Implement the model in pytorch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Using DNNs for separation</h1>
+	<img width="100%" style="float:center" src="assets/vanilla_lstm_test.svg" alt="">
+	<ul class="practice">
+		<li>Use the vanilla model for separation</li>
+	</ul>
+</section>
+
+
+<section>
+	<h1>An introduction to training</h1>
+	<ul>
+		<li>Sampling</li>
+		<li>Gradient descent</li>
+		<li>Discriminative training</li>
+		<li>Generative training</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Sampling vocabulary</h1>
+	<img  style="margin-top:5%" width="100%" src="assets/training_dataset.svg" alt="">
+</section>
+
+<section>
+	<h1>Sampling vocabulary</h1>
+	<img  style="margin-top:5%" width="100%" src="assets/training_dataset_batch.svg" alt="">
+</section>
+
+<section>
+	<h1>Sampling vocabulary</h1>
+	<img  style="margin-top:5%" width="100%" src="assets/training_dataset_learning.svg" alt="">
+</section>
+
+<section>
+	<h1>Sampling vocabulary</h1>
+	<img  style="margin-top:5%" width="100%" src="assets/one_epoch.gif" alt="">
+</section>
+
+<section>
+	<h1>Sampling strategy in audio</h1>
+	<img width="41%" style="margin-top:9%; float:left" src="assets/audio_dataset.svg" alt="">
+	<div style="margin-top:42%">
+		<ul>
+			<li>Audio datasets are made of tracks</li>
+			<li>Samples are short excerpts</li>
+		</ul>
+	<p>
+	$\Rightarrow$ How to organize sampling?
+	</div>
+</section>
+
+<section>
+	<h1>Sampling strategy in audio</h1>
+	<img width="64%" style="float:left" src="assets/twsw.gif" alt="">
+	<ul>
+		<li>Non unique tracks in batch</li>
+		<li>Not all samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Sampling strategy in audio</h1>
+	<img width="64%" style="float:left" src="assets/twosw.gif" alt="">
+	<ul>
+		<li>Unique tracks in batch</li>
+		<li>Not all samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Sampling strategy in audio</h1>
+	<img width="64%" style="float:left" src="assets/twswo.gif" alt="">
+	<ul>
+		<li>Non unique tracks in batch</li>
+		<li>All samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Sampling strategy in audio</h1>
+	<img width="64%" style="float:left" src="assets/twoswo.gif" alt="">
+	<ul>
+		<li>Unique tracks in batch</li>
+		<li>All samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Sampling strategy in audio</h1>
+	DO WE KEEP THIS ?
+	<img width="50%" style="margin-top:6%; float:left" src="assets/results/PLOT_17/loss.svg" alt="">
+	<ul style="margin-top:5%;">
+		<li>Unique tracks per batch is slower</li>
+		<li>All samples per epoch is faster</li>
+	</ul>
+	<h6 style="margin-top:30%; color:gray">
+	B. Recht. "Beneath the valley of the noncommutative arithmetic-geometric mean inequality: conjectures, case-studies. and consequences." (2012). Technical report.
+	</h6>
+</section>
+
+<section>
+	<h1>Gradient descent</h1>
+	SOMETHING HERE FOR INTRODUCING THE CONCEPT OF A LOSS, and the general concept of
+	training through batches
+</section>
+
+<section>
+	<h1>Gradient descent</h1>
+	<img  style="margin-top:5%; float:right" width="43%" src="assets/gradient_descent.gif" alt="">
+	<ul>
+		<li>$loss\leftarrow \sum_{(x,y)\in batch}cost\left(y_\Theta\left(x\right), y\right)$</li>
+		<li>Update $\Theta$ to reduce the loss!</li>
+		<p>
+		<li>We can compute $\frac{\partial loss}{\partial\Theta_{i}}$ for any parameter $\Theta_i$
+			<ul>
+				<li>"The influence of $\Theta_i$ on the error"</li>
+				<li>It's the <strong>gradient</strong></li>
+				<li>Computed through <strong>backpropagation</strong></li>
+			</ul>
+		</li><p>
+		<li>A simple optimization: $\Theta_i\leftarrow \Theta_i - \lambda \frac{\partial loss}{\partial\Theta_{i}}$
+			<ul>
+				<li>It's the <strong>stochastic gradient descent</strong></li>
+				<li>$\lambda$ is the <strong>learning rate</strong></li>
+			</ul>
+		</li>
+		<li>Batching is important</li>
+	</ul>
+	<p>
+	There are many other optimization algorithms...
+	<!--
+	<h6 style="color:gray">
+		<ul>
+			<li><strong>RMSprop</strong> T. Tieleman, et al. "Lecture 6.5-rmsprop: Divide the gradient by a running average of its recent magnitude." COURSERA: Neural networks for machine learning 4.2 (2012): 26-31.
+			<li><strong>Adam</strong>	D. Kingma, et al. "Adam: A method for stochastic optimization." arXiv preprint (2014) arXiv:1412.6980.
+
+		</ul>
+	</h6> -->
+</section>
+
+<section>
+	<h1>Gradient descent</h1>
+	<h2>Learning rate wisdom</h2>
+	<img  style="margin-top:5%; " width="45%" src="assets/gradient_descent_big.gif" alt="">
+	<!-- <img  style="margin-top:5%; float:center" width="33%" src="assets/gradient_descent.gif" alt=""> -->
+	<img  style="margin-top:5%; " width="40%" src="assets/learningrates.jpg" alt="">
+	<h6 style="margin-top:10%; color:gray">
+		Leonardo Araujo dos Santos, <a href="https://leonardoaraujosantos.gitbooks.io/artificial-inteligence/content/model_optimization.html">Artificial Intelligence</a>, 2017.
+	</h6>
+</section>
+
+
+<section>
+	<h1>Discriminative training</h1>
+	<img  style="margin-top:5%; float:center" width="20%" src="assets/sample_supervised.svg" alt="">
+</section>
+
+<section>
+	<h1>Discriminative training, in audio</h1>
+	<img width="100%" style="float:center" src="assets/sample_supervised_temporal.svg" alt="">
+	<ul class="practice">
+		<li>Build a naive data sampler</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Discriminative training, computing the loss</h1>
+	<img  style="margin-top:5%; float:center" width="100%" src="assets/training_networks_0.svg" alt="">
+</section>
+
+<section>
+	<h1>Discriminative training, computing the loss</h1>
+	<img  style="margin-top:5%; float:center" width="100%" src="assets/training_networks_1.svg" alt="">
+</section>
+
+<section>
+	<h1>Discriminative training, computing the loss</h1>
+	<img  style="margin-top:5%; float:center" width="100%" src="assets/training_networks_2.svg" alt="">
+</section>
+
+	<section>
+		<h1>Discriminative training: the audio loss jungle</h1>
+			<img width="20%" style="float:left" src="assets/cost_function.svg" alt="">
+$loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right)\right)$<p>
+	<img width="30%" style="float:right" src="assets/costfunction_jungle.gif" alt="">
+			<ul>
+			<li>Wide variety of loss functions $d\left(a,b\right)$
+				<ul>
+					<li>squared loss $\left|a-b\right|^2$</li>
+					<li>absolute loss $\left|a-b\right|$</li>
+					<li>Kullback Leibler loss $a\log\frac{a}{b}-a+b$</li>
+					<li>Itakura Saito loss $\frac{a}{b}-\log\frac{a}{b}-1$</li>
+					<li>Cauchy, alpha divergence, ...<p></li>
+				</ul>
+			</li>
+			<li>Applied on $Y$, $Y^2$, any $Y^\alpha$, $\log Y$, ...</li>
+			<li>Theoretical groundings for all</li>
+		</ul>
+		<h6 style="margin-top:5%; color:gray">
+			C. Févotte, et al. "Algorithms for nonnegative matrix factorization with the β-divergence." Neural computation 23.9 (2011): 2421-2456.
+		</h6>
+		<h6 style="margin-top:1%; color:gray">
+			A. Liutkus, et al. "Generalized Wiener filtering with fractional power spectrograms." (2015) ICASSP.
+		</h6>
+		<!-- SOME HANDS ON IN THE PRACTICE SESSION ? -->
+	</section>
+
+	<section>
+		<h1>Discriminative training: the audio loss jungle</h1>
+		<img width="30%" style="float:center" src="assets/costfunctions_SDR.png" alt="">
+		<img width="30%" style="float:center" src="assets/costfunctions_SIR.png" alt="">
+		<img width="30%" style="float:center" src="assets/costfunctions_SAR.png" alt="">
+		<h6 style="margin-top:2%; color:gray">
+			A. Nugraha, et al. "Multichannel Audio Source Separation With Deep Neural Networks." TASLP 24.9 (2016): 1652-1664.
+		</h6>
+	</section>
+
+
+<section>
+	<h1>Generative training</h1>
+	introduction for unpaired data
+</section>
+<section>
+	<h1>Generative training</h1>
+	generative adversarial separation
+</section>
+<section>
+	<h1>Generative training</h1>
+	Difference between generative and discriminative adversarial
+</section>
+
+
+<!-- <section>
+	<h1>Vanilla DNN for separation: evaluation</h1>
+	<img width="90%" style="float:left" src="assets/results/PLOT_1/boxplot.svg" alt="">
+	<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+</section> -->
+
+<!--
+<section>
+	<h1>Outline</h1>
+	<h2>Choosing the right representation</h2>
+	<ul>
+		<li>Input dimensionality reduction</li>
+		<li>Fourier transforms parameters</li>
+		<li>Standardization</li>
+	</ul>
+</section>
+
+<section>
+	<section>
+		<h1>Choosing the right representation: standardization</h1>
+		<img width="47%" style="float:left" src="assets/standardization.svg" alt="">
+		<ul>
+			<li>Compensate different features scales</li>
+			<li>Classical pre-processing</li>
+			<li>Either dataset stats or trainable
+		</ul>
+	</section>
+	<section>
+		<h1>Choosing the right representation: standardization</h1>
+		<img width="49%" style="float:center" src="assets/results/PLOT_2/loss.svg" alt="">
+		<img width="49%" style="float:center" src="assets/results/PLOT_2/boxplot.svg" alt="">
+		<ul>
+			<li>Input/output scaling always lead to better loss</li>
+			<li>Trainable is better than fixed</li>
+			<li>Good loss needs scaling, but no influence on SDR</li>
+		</ul>
+		<p>
+		<ul>
+			<li>We use scaling all the time</li>
+		</ul>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Choosing the right representation: Fourier transform</h1>
+		<img width="80%" style="margin-top:5%; float:center" src="assets/FFT_parameters.svg" alt="">
+		<ul style="margin-top:5%;">
+			<li>Network is always fed 360ms of context</li>
+		</ul>
+	</section>
+	<section>
+		<h1>Choosing the right representation: Fourier transform</h1>
+		<img width="70%" style="float:center" src="assets/results/PLOT_3/boxplot.svg" alt="">
+		<ul>
+			<li><strong>Frames</strong>: 92ms=4096 samples @ 44k1kHz</li>
+			<li><strong>Overlap</strong>: 75%</li>
+		</ul>
+			<p>
+			<ul>
+				<li>Long frames, large overlap</li>
+			</ul>
+		</ul>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Choosing the right representation</h1>
+		<h2>Input dimensionality reduction</h2>
+		<img width="54%" style="float:left" src="assets/input_dimensionality_reduction.svg" alt="">
+		<ul>
+			<li>Reduce number of parameters?
+				<ul>
+					<li>From 6 million to 500k</li>
+				</ul>
+			</li>
+			<li>Fixed or trainable reduction</li>
+			<li>Should we handcraft features?</li>
+		</ul>
+	</section>
+	<section>
+		<h1>Choosing the right representation</h1>
+		<h2>Input dimensionality reduction</h2>
+		<img width="90%" style="float:center" src="assets/results/PLOT_4/boxplot.svg" alt="">
+		<ul>
+			<li>Reducing dimension
+				<ul>
+					<li>Reduces model size</li>
+					<li>Gives bettter performance</li>
+				</ul>
+			</li>
+		</ul>
+
+		<p>
+		<ul>
+			<li>Don't handcraft features, train them</li>
+		</ul>
+		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+	</section>
+</section>
+
+<section>
+	<h1>Outline</h1>
+	<h2>DNN Structure: optimizing the vanilla net</h2>
+	<img width="22%" style="margin-top:5%; float:left" src="assets/fancy_vanilla.svg" alt="">
+	<p>
+	<ul style="margin-top:5%;">
+		<li>Network dimensions</li>
+		<li>LSTM vs BLSTM</li>
+		<li>Skip connection</li>
+	</ul>
+</section>
+
+<section>
+	<section>
+		<h1>DNN structure: network dimension</h1>
+		<img width="73%" style="float:left" src="assets/structure_tuning.svg" alt="">
+	</section>
+	<section>
+		<h1>DNN structure: network dimension</h1>
+		<h2>The more parameters, the better</h2>
+		<img width="40%" style="float:center" src="assets/results/PLOT_6/loss_layers_integrated.svg" alt="">
+		<img width="40%" style="float:center" src="assets/results/PLOT_6/loss_len_integrated.svg" alt="">
+		<ul style="margin-top:1%;">
+			<li>Context length not so important
+				<ul>
+					<li>LSTM unable to model long-term musical contexts?</li>
+				</ul>
+			</li>
+			<li>Hidden size (model dimension) has strong influene</li>
+		</ul>
+		<p>
+		<ul>
+			<li>Large models are good</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>DNN structure: network dimension</h1>
+		<h2>The more parameters, the better,  <font color="black">really?</font></h2>
+		<img width="100%" style="float:center" src="assets/results/PLOT_5/table.svg" alt="">
+		<ul style="margin-top:1%;">
+			<li>Moderate impact on SDR</li>
+			<li>Strong impact on SIR
+			<ul>
+				<li>Improves separation much</li>
+				<li>But not a huge impact as in loss</li>
+			</ul>
+		</ul>
+		<p>
+		<ul>
+			<li>Loss on spectrograms is <strong>not</strong> audio quality
+			<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+
+		</ul>
+
+
+
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>DNN structure: LSTM vs BLSTM</h1>
+		<img width="60%" style="float:left" src="assets/structure_tuning_blstm.svg" alt="">
+	</section>
+	<section>
+		<h1>DNN structure: LSTM vs BLSTM</h1>
+		<img width="39%" style="float:left" src="assets/results/PLOT_8/loss.svg" alt="">
+		<img width="60%" style="float:center" src="assets/results/PLOT_9/boxplot.svg" alt="">
+		<p>
+		<ul>
+			<li>Loss is similar</li>
+			<li>BLSTM are better metric-wise</li>
+		</ul>
+
+		<p>
+		<ul>
+			<li>In practice: BLSTM require the <strong>same context length at train and test</strong>
+			<p>$\Rightarrow$ chop the data into batches at test time!</li>
+		</ul>
+
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>DNN structure: skip connection</h1>
+		<img width="42%" style="float:left" src="assets/structure_tuning_skip.svg" alt="">
+		<ul>
+			<li>Should reduce vanishing gradient</li>
+			<li>Much used in very deep nets</li>
+		</ul>
+	</section>
+	<section>
+		<h1>DNN structure: skip connection</h1>
+		<img width="39%" style="float:left" src="assets/results/PLOT_10/loss.svg" alt="">
+		<img width="60%" style="float:center" src="assets/results/PLOT_11a/boxplot.svg" alt="">
+		<ul style="margin-top:2%;">
+			<li>Improves loss slightly</li>
+			<li>No effect on overall metrics</li>
+		</ul>
+	</section>
+	<section>
+		<h1>DNN structure: skip connection</h1>
+		<img width="40%" style="float:left" src="assets/results/PLOT_11b/boxplot.svg" alt="">
+		<ul>
+			<li>Better bass and drums</li>
+		</ul>
+		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+
+	</section>
+</section>
+
+</section> -->
+
+<!-- <section>
+	<h1>Recap: current structure for the baseline</h1>
+	<img width="42%" style="float:left" src="assets/structure_after_tuning.svg" alt="">
+	<img width="40%" style="float:right" src="assets/results/PLOT_12/boxplot.svg" alt="">
+</section> -->
+
+<!--
+<section>
+
+	<section>
+		<h1>Training: learning rate and normalization</h1>
+		<img  style="margin-top:0%; float:left" width="80%" src="assets/structure_bnln.svg" alt="">
+	</section>
+
+	<section>
+		<h1>Training: learning rate and normalization</h1>
+		<img width="39%" style="margin-top:6%; float:left" src="assets/results/PLOT_13/loss.svg" alt="">
+		<ul style="margin-top:10%;">
+			<li>High learning rates don't work</li>
+		</ul>
+		<ul  style="margin-top:4%;">
+			<li>Keep default parameters for optim</li>
+		</ul>
+
+	</section>
+	<section>
+		<h1>Training: learning rate and normalization</h1>
+		<img width="49%" style="margin-top:6%; float:left" src="assets/results/PLOT_14/loss.svg" alt="">
+		<ul style="margin-top:6%;">
+			<li>batchnorm fails in our case
+			<ul>
+				<li>train batch: many songs</li>
+				<li>test batch: one song</li>
+			</ul>
+			<li style="margin-top:6%;">layernorm forces matching
+			<ul>
+				<li>test batch: normalized as in training</li>
+			</ul>
+			</li>
+		</ul>
+		<ul  style="margin-top:4%;">
+			<li>batchnorm behaves wildly, avoid it</li>
+		</ul>
+		<img width="20%" style="float:right" src="assets/true_story.svg" alt="">
+
+	</section>
+
+	<section>
+		<h1>Training: learning rate and normalization</h1>
+		<img width="75%" style="margin-top:6%; float:left" src="assets/results/PLOT_15/boxplot.svg" alt="">
+		<ul  style="margin-top:4%;">
+				<li>Improves isolation: better SIR</li>
+				<li>Adds distortion: worse SAR</li>
+		</ul>
+		<p>
+		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+	</section>
+</section> -->
+
+<section>
+	I'm there so far
+</section>
+
+<section>
+	<section>
+		<h1>Training: regularization with dropout</h1>
+		<img  style="margin-top:5%; float:left" width="30%" src="assets/dropout.gif" alt="">
+		<ul style="margin-top:5%;">
+			<li>Parts of the net randomly set to 0</li>
+			<li>No unit should be critical: <i>regularization</i></li>
+			<li>Probabilistic interpretation</li>
+		</ul>
+		<h6 style="margin-top:30%; color:gray">
+			N Srivastava, et al. "Dropout: a simple way to prevent neural networks from overfitting". JMLR. (2014) 15(1), 1929-1958.
+		</h6>
+	</section>
+
+	<section>
+		<h1>Training: regularization with dropout</h1>
+		<img width="40%" style="margin-top:6%; float:left" src="assets/results/PLOT_16/loss.svg" alt="">
+		<ul style="margin-top:6%;">
+			<li>Regularization makes things worse</li>
+		</ul>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Training: data augmentation</h1>
+		<img width="70%" style="float:center" src="assets/sample_overlap.svg" alt="">
+		<ul style="margin-top:5%;">
+			<li>Basic augmentation: overlap samples within each track</li>
+			<li>There are more advanced strategies</li>
+		</ul>
+		<h6 style="margin-top:10%; color:gray">
+			S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." (2017) ICASSP.
+		</h6>
+	</section>
+
+	<section>
+		<h1>Training: data augmentation</h1>
+		<img width="49%" style="margin-top:6%; float:left" src="assets/results/PLOT_18/boxplot.svg" alt="">
+		<ul  style="margin-top:10%;">
+			<li>Basic augmentation helps a bit (0.5dB)</li>
+		</ul>
+		<!-- TAKE HOME -->
+		<ul  style="margin-top:4%;">
+			<li>Not shown: new tracks are better!</li>
+		</ul>
+	</section>
+</section>
+
+<!-- <section>
+	<section>
+		<h1>Training: spectrogram quality</h1>
+		<ul>
+			<li>Introducing musmag dataset</li>
+			<li>norbert</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Training: spectrogram quality</h1>
+		o Performance comparison
+	</section>
+</section> -->
+
+<section>
+	<h1>The open-unmix (UMX) model</h1>
+	<img  style="margin-top:10%; float:left" width="150%" src="assets/UMX.svg" alt="">
+	<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
+	<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
+</section>
+
+<!-- TESTING -->
+<section>
+	<h1>Outline</h1>
+	<h2>Testing</h2>
+	<ul>
+		<li>Representation</li>
+		<li>Mono filter tricks</li>
+		<li>Multichannel Gaussian model</li>
+		<li>The multichannel Wiener filter</li>
+		<li>Testing: evaluation</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Testing: representations</h1>
+	<ul>
+		<li>The first source of poor results: inverse STFT!</li>
+		<li>Verify perfect reconstruction</li><p>
+		<li>Better: use established libraries, like <code>librosa</code>, <code>scipy</code>...</li>
+	</ul>
+</section>
+
+<section>
+	<!-- <section>
+		<h1>Testing: mono filter tricks</h1>
+		<h2>The huge impact of epsilons</h2>
+		<ul>
+			<li>Flooring spectrograms gives: $mask=\frac{v_j+\epsilon}{\sum_{j'} v_j'+\epsilon}$</li>
+			<li>For small $v_j$: strong interferences</li>
+		</ul>
+		<p>
+		Always do: $mask=\frac{v_j}{\epsilon + \sum_{j'} v_j'}$
+		<ul>
+			<li>Player with first option and $\epsilon=1e-3$</li>
+			<li>Player with second option and $\epsilon=1e-3$</li>
+		</ul>
+	</section>
+ -->
+	<section>
+		<h1>Testing: mono filter tricks</h1>
+		<h2>Logit filters</h2>
+		<img  style="margin-top:0%; float:left" width="50%" src="assets/logit_trick.svg" alt="">
+		<ul>
+			<li>If the mask is 0.8... just put 1</li>
+			<li>If the mask is 0.2... just put 0</li>
+			<li>Cheap interference reduction</li>
+		</ul>
+		<p>
+		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_1.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_2.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_3.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_4.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_5.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_6.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_7.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_8.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_9.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_10.svg" alt="">
+	</section>
+	<section>
+		<h1>Multichannel Gaussian model</h1>
+		<img  style="margin-top:0%; float:left" width="100%" src="assets/stereo_explanation_11.svg" alt="">
+	</section>
+</section>
+<section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:3%; float:center" width="70%" src="assets/joint_distribution_source_mix.svg" alt="">
+		<ul style="margin-top:3%">
+			<li>Sources and mixtures are jointly Gaussian</li>
+			<li>We observe the mix, what can we say about the sources?</li>
+		</ul>
+	</section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/joint_gaussian_1.svg" alt="">
+	</section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/joint_gaussian_2.svg" alt="">
+	</section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/joint_gaussian_3.svg" alt="">
+	</section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/joint_gaussian_4.svg" alt="">
+	</section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/joint_gaussian_6.svg" alt="">
+	</section>
+	<section>
+		<h1>Testing: the multichannel Wiener filter</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/joint_gaussian_7.svg" alt="">
+	</section>
+
+	<section>
+		<h1>Testing: the Expectation-Maximization algorithm</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/expectation_maximization_big_picture.svg" alt="">
+	</section>
+</section>
+
+<section>
+	<section>
+		<h1>Testing: evaluation</h1>
+		<img width="100%" style="float:left" src="assets/test_eval_settings.svg" alt="">
+	</section>
+
+	<section>
+		<h1>Testing: evaluation</h1>
+		<img width="55%" style="float:left" src="assets/results/test_boxplot.svg" alt="">
+		<ul>
+			<li>Iterations improve SIR <p>
+			$\Rightarrow$ greatly reduces interferences</li>
+			<li>Iterations worsen SAR<p>
+			$\Rightarrow$ introduces distortion</li>
+			<li>logit has good SIR<p>
+				$\Rightarrow$ cheap interference reduction</li
+		</ul>
+		<img width="40%" style="float:left" src="assets/results/test_boxplot_legend.svg" alt="">
+	</section>
+
+	<section>
+		<h1>Testing: evaluation</h1>
+		<img width="15%" style="position:absolute; right:1%; top:5%" src="assets/cherry.svg" alt="">
+		<img width="100%" style="margin-top:10%; float:left" src="assets/results/boxplot_proposed.svg" alt="">
+	</section>
+</section>
+
+<section>
+	<h1>Outline</h1>
+	<h2>Conclusion</h2>
+	<ul>
+		<li>Resulting baseline</li>
+		<li>What was kept out</li>
+		<li>What is promising</li>
+		<li>Ending remarks</li>
+	</ul>
+</section>
+
+
+<section>
+	<section>
+		<h1>Conclusion: the open source unmix</h1>
+		<img  style="margin-top:0%; float:left" width="29%" src="assets/results/boxplot_SDR_sisec.svg" alt="">
+		<img  style="margin-top:0%; float:center" width="31%" src="assets/results/pairwise_vocals_SDR.svg" alt="">
+		<img  style="margin-top:0%; float:center" width="31%" src="assets/results/pairwise_vocals_SIR.svg" alt="">
+		<img  style="margin-top:0%; float:center" width="31%" src="assets/results/pairwise_vocals_SAR.svg" alt="">
+		<img  style="margin-top:0%; float:center" width="24%" src="assets/mission_accomplished.svg" alt="">
+	</section>
+
+
+	<section>
+		<h1>Conclusion: what was kept out</h1>
+		<ul>
+			<li>Exotic representations</li>
+		</ul>
+		<p>
+		<img width="22%" style="float:left" src="assets/crazy_vanilla.svg" alt="">
+		<ul>
+			<li>Alternative structures
+				<ul>
+					<li>The convolutional neural network (CNN)</li>
+					<li>The U-NET</li>
+					<li>The MM-densenet</li>
+					<li>Deep clustering</li>
+				</ul>
+			</li>
+			<li>Generative approaches
+				<ul>
+					<li>Generative adversarial nets</li>
+					<li>(Variational) auto encoders</li>
+				</ul>
+			</li>
+			<li>Deep clustering</li>
+		</ul>
+		<p>
+		<ul>
+			<li>Full grid search over parameters (fund us!)</li>
+			<li>Advanced data augmentation (naive=+0.3dB SDR)</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Conclusion: what is promising</h1>
+		<h2>More data</h2>
+		<ul>
+			<li>More data</li>
+			<li>Even more data</li>
+			<li>Did we mention more data?</li>
+		</ul>
+		<p>
+		<h2>New approaches</h2>
+		<ul>
+			<li>Structures with more parameters work better...</li>
+			<li>Better signal processing helps</li>
+		</ul>
+		<h2>Engineering</h2>
+		<ul>
+			<li>We got 3dB SDR improvement with no publishable contribution<p>
+			$\Rightarrow$ evaluating the real impact of a contribution is difficult</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Conclusion: ending remarks</h1>
+		<ul>
+			<li>Convergence of signal processing, probability theory and DL</li>
+			<li>Learning with limited amount of data</li>
+			<li>Model long term dependency</li>
+			<li>Representation learning for sound and music</li>
+			<li>Exploiting knowledge domain, user interaction</li>
+			<li>Unsupervised learning ?</li>
+		</ul>
+		<p>
+		<h1>Resources</h1>
+		<ul>
+			<li>References and Software tools: <a href="https://sigsep.github.io">sigsep.github.io</a></li>
+			<li>SiSEC 2018 Website: <a href="https://sisec18.unmix.app">sisec18.unmix.app</a></li>
+		</ul>
+	</section>
+</section>
+
+			</div>
+			<div class='footer'>
+				<img src="css/theme/img/inria-bottom.svg" alt="Logo" />
+				<div id="middlebox">Deep Learning for Music Unmixing</div>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				controls: false,
+				progress: false,
+				history: true,
+				center: false,
+				slideNumber: true,
+				minScale: 1,
+				maxScale: 5,
+				viewDistance: 30,
+				transition: 'none', //
+
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/math-katex/math-katex.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
