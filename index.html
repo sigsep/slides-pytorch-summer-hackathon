@@ -108,7 +108,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 		</li>
 		<li>Objectives of this tutorial
 		<ul>
-			<li>Basics of DNN, basics of signal processing</li>
+			<li>Basics of signal processing, basics of DNN</li>
 			<li>Understand an open-source state of the art system</li>
 			<li>Implement it!</li>
 		</ul>
@@ -122,11 +122,12 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<h1>Tutorial general outline</h1>
 	<ul>
 		<li>Signal processing basics</li>
-		<li>A brief history of separation</li>
+		<li>A brief history of music separation</li>
 		<li>Evaluation and datasets</li>
 		<li>A starter on deep neural networks</li>
+		<li>Discriminative and generative separation</li>
 		<li>An introduction to training</li>
-		<li>The `Open-unmix` baseline model</li>
+		<li>The open-unmix baseline model</li>
 		<li>Training tricks</l1>
 		<li>Testing tricks</li>
 		<li>Conclusion</li>
@@ -228,9 +229,9 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<div class="centered">
 		<img width="90%" class="stretch" src="assets/discriminative_big_picture.svg" alt="">
 	</div>
-	<h6 style="margin-top:4%; color:gray">
+	<h6 style="margin-top:3%; color:gray">
 	Rafii, Zafar, et al. "An Overview of Lead and Accompaniment Separation in Music."
-	IEEE/ACM Transactions on Audio, Speech and Language Processing (TASLP) 26.8 (2018): 1307-1335.
+	IEEE/ACM TASLP 26.8 (2018): 1307-1335.
 	</h6>
 </section>
 
@@ -250,7 +251,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<section>
 		<h1>A brief history: model-driven methods</h1>
 		<h2>Redundancy for the accompaniment: NMF</h2>
-		<img style="float:right" width="41%" src="assets/model_based/ReviewPaper_ Figure3.svg" alt="">
+		<img style="float:right" width="38%" src="assets/model_based/ReviewPaper_ Figure3.svg" alt="">
 		<ul>
 			<li>Spectral templates</li>
 			<li>Low-rank assumptions</li>
@@ -296,7 +297,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 	<section>
 		<h1>A brief history: model-driven methods</h1>
-		<img style="float:right" width="45%" src="assets/model_based/ReviewPaper_ Figure8.svg" alt="">
+		<img style="float:right" width="43%" src="assets/model_based/ReviewPaper_ Figure8.svg" alt="">
 		<h2>Cascaded methods</h2>
 		<ul>
 			<li>Combining methods</li>
@@ -574,7 +575,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 <section>
 	<h1>Evaluating quality</h1>
-	<h2><img width="50px"src="assets/matlab.jpg" alt="">BSSeval v3</h2>
+	<h2><img width="50px"src="assets/matlab.jpg" style="position:relative;left:0px; top:10px;" alt="">BSSeval v3</h2>
 	All metrics in dB. The higher, the better:
 	<ul>
 		<li><strong>SDR</strong>: Source to distortion ratio. <em>Error in the estimate</em>.</li>
@@ -584,9 +585,9 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<p>
 	<h6 style="margin-top:2%; color:gray">
 	E. Vincent et al. "Performance measurement in blind audio source separation."
-	IEEE transactions on audio, speech, and language processing 14.4 (2006): 1462-1469.
+	IEEE TASLP 14.4 (2006): 1462-1469.
 	</h6>
-	<h2><img width="50px"src="assets/python.jpg" alt="">museval (BSSeval v4)</i></h2>
+	<h2><img width="50px"src="assets/python.jpg" style="position:relative;left:0px; top:25px;" alt="">museval (BSSeval v4)</i></h2>
 	<ul>
 		<li><strong>Better</strong> matching filters computed track-wise </li>
 		<li><strong>Faster</strong> 10x</li>
@@ -743,25 +744,41 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>A naive recurrent net for separation</h1>
-	<img width="48%" style="margin-top:5%; float:left" src="assets/vanilla_lstm.svg" alt="">
+	<h1>Discriminative source separation: one source</h1>
+	<img width="48%" style="margin-top:5%; float:left" src="assets/discriminative_main_lines.svg" alt="">
 	<img width="20%" style="float:left" src="assets/vanilla.svg" alt="">
 	<ul style="margin-top:5%;">
-		<li>One LSTM</li>
-		<li>One fully connected</li>
-		<li>6 million parameters</li>
-	</ul>
-	<p>
-	<ul class="practice">
-		<li>Implement the model in pytorch</li>
+		<li>Directly get source from mixture</li>
+		<li>Straightforward inference</li>
+		<li>Requires mixtures for training</li>
 	</ul>
 </section>
 
 <section>
-	<h1>Using DNNs for separation</h1>
+	<h1>Discriminative source separation: all sources</h1>
 	<img width="100%" style="float:center" src="assets/vanilla_lstm_test.svg" alt="">
 	<ul class="practice">
-		<li>Use the vanilla model for separation</li>
+		<li>Load pre-trained models</li>
+		<li>Combine estimates with signal processing</li>
+		<li>Evaluate on MUSDB18</li>
+	</ul>
+</section>
+
+
+<section>
+	<h1>Generative source separation</h1>
+	<img width="48%" style="margin-top:5%; float:left" src="assets/generative_model.svg" alt="">
+	<ul style="margin-top:5%;">
+		<li>The model can transform random noise to realistic spectrograms</li>
+		<li>Training is done without mixtures</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Generative source separation: inference</h1>
+	<img width="100%" style="margin-top:1%; float:left" src="assets/generative_test.svg" alt="">
+	<ul style="margin-top:5%;">
+		<li>Testing requires inference of the latent variables ("noise")</li>
 	</ul>
 </section>
 
@@ -798,7 +815,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 <section>
 	<h1>Sampling strategy in audio</h1>
-	<img width="41%" style="margin-top:9%; float:left" src="assets/audio_dataset.svg" alt="">
+	<img width="40%" style="margin-top:9%; float:left" src="assets/audio_dataset.svg" alt="">
 	<div style="margin-top:42%">
 		<ul>
 			<li>Audio datasets are made of tracks</li>
@@ -810,8 +827,8 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Sampling strategy in audio</h1>
-	<img width="64%" style="float:left" src="assets/twsw.gif" alt="">
+	<h1>Hierarchical sampling in audio</h1>
+	<img width="62%" style="float:left" src="assets/twsw.gif" alt="">
 	<ul>
 		<li>Non unique tracks in batch</li>
 		<li>Not all samples per epoch</li>
@@ -819,8 +836,8 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Sampling strategy in audio</h1>
-	<img width="64%" style="float:left" src="assets/twosw.gif" alt="">
+	<h1>Hierarchical sampling in audio</h1>
+	<img width="62%" style="float:left" src="assets/twosw.gif" alt="">
 	<ul>
 		<li>Unique tracks in batch</li>
 		<li>Not all samples per epoch</li>
@@ -828,8 +845,8 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Sampling strategy in audio</h1>
-	<img width="64%" style="float:left" src="assets/twswo.gif" alt="">
+	<h1>Hierarchical sampling in audio</h1>
+	<img width="62%" style="float:left" src="assets/twswo.gif" alt="">
 	<ul>
 		<li>Non unique tracks in batch</li>
 		<li>All samples per epoch</li>
@@ -837,8 +854,8 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Sampling strategy in audio</h1>
-	<img width="64%" style="float:left" src="assets/twoswo.gif" alt="">
+	<h1>Hierarchical sampling in audio</h1>
+	<img width="62%" style="float:left" src="assets/twoswo.gif" alt="">
 	<ul>
 		<li>Unique tracks in batch</li>
 		<li>All samples per epoch</li>
@@ -846,8 +863,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Sampling strategy in audio</h1>
-	DO WE KEEP THIS ?
+	<h1>Hierarchical sampling in audio</h1>
 	<img width="50%" style="margin-top:6%; float:left" src="assets/results/PLOT_17/loss.svg" alt="">
 	<ul style="margin-top:5%;">
 		<li>Unique tracks per batch is slower</li>
@@ -856,12 +872,6 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<h6 style="margin-top:30%; color:gray">
 	B. Recht. "Beneath the valley of the noncommutative arithmetic-geometric mean inequality: conjectures, case-studies. and consequences." (2012). Technical report.
 	</h6>
-</section>
-
-<section>
-	<h1>Gradient descent</h1>
-	SOMETHING HERE FOR INTRODUCING THE CONCEPT OF A LOSS, and the general concept of
-	training through batches
 </section>
 
 <section>
@@ -975,14 +985,27 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		</h6>
 	</section>
 
+	<section>
+		<h1>Practice: discriminative training</h1>
+		<ul>
+			<li>Load the MUSDB18 dataset</li>
+			<li>Create a model, an optimizer</li>
+			<li>Sample excerpts, compute loss</li>
+			<li>Train the model</li>
+		</ul>
+	</section>
 
 <section>
 	<h1>Generative training</h1>
-	introduction for unpaired data
+	big picture of generative modelling vs discriminative
 </section>
 <section>
 	<h1>Generative training</h1>
-	generative adversarial separation
+	Inference in generative models for separation
+</section>
+<section>
+	<h1>Generative training</h1>
+	trends: VAE, GANs
 </section>
 <section>
 	<h1>Generative training</h1>
@@ -1213,6 +1236,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<img width="40%" style="float:right" src="assets/results/PLOT_12/boxplot.svg" alt="">
 </section> -->
 
+
 <!--
 <section>
 
@@ -1267,7 +1291,41 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 </section> -->
 
 <section>
-	I'm there so far
+	<section>
+		<h1>The open-unmix (UMX) model</h1>
+		<h2>A baseline discriminative model for music separation</h2>
+		<img  style="margin-top:10%; float:left" width="100%" src="assets/UMX1.svg" alt="">
+		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
+		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
+	</section>
+	<section>
+		<h1>The open-unmix (UMX) model</h1>
+		<h2>A baseline discriminative model for music separation</h2>
+		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX2.svg" alt="">
+		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
+		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
+	</section>
+	<section>
+		<h1>The open-unmix (UMX) model</h1>
+		<h2>A baseline discriminative model for music separation</h2>
+		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX3.svg" alt="">
+		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
+		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
+	</section>
+	<section>
+		<h1>The open-unmix (UMX) model</h1>
+		<h2>A baseline discriminative model for music separation</h2>
+		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX4.svg" alt="">
+		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
+		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
+	</section>
+	<section>
+		<h1>The open-unmix (UMX) model</h1>
+		<h2>A baseline discriminative model for music separation</h2>
+		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX.svg" alt="">
+		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
+		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
+	</section>
 </section>
 
 <section>
@@ -1334,12 +1392,6 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	</section>
 </section> -->
 
-<section>
-	<h1>The open-unmix (UMX) model</h1>
-	<img  style="margin-top:10%; float:left" width="150%" src="assets/UMX.svg" alt="">
-	<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
-	<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
-</section>
 
 <!-- TESTING -->
 <section>
