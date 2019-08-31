@@ -101,21 +101,22 @@ An audio demo of the critical impact of engineering for the “same” system.
 			<li>Not-so-recent fact: <strong>separation with DNN works</strong></li>
 		</ul>
 		<p>
-		<img width="30%" style="float:right; margin-top:1%;" src="assets/stefanyuki.svg" alt="">
-		<li  style="margin-top:5%;">State of the art: SONY corporation systems
+		<img width="30%" style="float:right; margin-top:2%;" src="assets/stefanyuki.svg" alt="">
+		<li  style="margin-top:4%;">State of the art: SONY corporation systems
 		<ul>
-			<h6 style="color:gray">S. Uhlich et al. "Deep neural network based instrument extraction from music." ICASSP 2015.</li>
-			</h6>
-			$\Rightarrow$ Vocals SDR: 5dB (SiSEC 2016), 6.3dB (SiSEC 2018)
+			<li style="color:gray">S. Uhlich et al. "Deep neural network based instrument extraction from music." ICASSP 2015.</li>
+			$\Rightarrow$ Vocals SDR: 5dB (SiSEC 2016)
+			<li style="color:gray">S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." ICASSP 2017.</li>
+			$\Rightarrow$ Vocals SDR: 5.9dB (SiSEC 2018)
 		</li></ul>
 		<p>
 
-		<li style="margin-top:10%;">Open implementations not matching state of the art
+		<li style="margin-top:4%;">Open (and popular) implementations 2.5 dB behind state of the art!
 		<ul>
-			<li><a href=https://github.com/MTG/DeepConvSep><i class="fab fa-github"></i>/MTG/DeepConvSep</a> (349<i class="fa fa-star" aria-hidden="true"></i>) 2.5 dB vocals SDR
+			<li><a href=https://github.com/MTG/DeepConvSep><i class="fab fa-github"></i>/MTG/DeepConvSep</a> (349<i class="fa fa-star" aria-hidden="true"></i>) 2.5 dB vocals SDR (SiSEC'16)
 			<div style="color:gray"><font size="4">P. Chandna et al. "Monoaural audio source separation using deep convolutional neural networks", LVA-ICA, 2017.</font></div>
 			</li>
-			<li><a href=https://github.com/f90/Wave-U-Net><i class="fab fa-github"></i>/f90/Wave-U-Net</a> (309<i class="fa fa-star" aria-hidden="true"></i>) 4.6 dB vocals SDR
+			<li><a href=https://github.com/f90/Wave-U-Net><i class="fab fa-github"></i>/f90/Wave-U-Net</a> (309<i class="fa fa-star" aria-hidden="true"></i>) 3.3 dB vocals SDR (SiSEC'18)
 			<div style="color:gray"><font size="4">D. Stoller "Wave-u-net: A multi-scale neural network for end-to-end audio source separation." arXiv, 2018.</font></div>
 			</li>
 		</ul>
@@ -124,6 +125,28 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 <section>
 	<h1>Motivations of this tutorial</h1>
+	<ul>
+		<li>Understand source separation
+		<ul>
+			<li>Quick overview of the topic</li>
+			<li>Signal processing aspects</li>
+			<li>Discriminative and generative methods</li>
+		</ul></li>
+		<p>
+		<li>Understand deep neural nets
+		<ul>
+			<li>Fundamental models for static/temporal data</li>
+			<li>A starter on training</li>
+			<li>Models for audio</li>
+		</ul></li>
+		<p>
+		<li>Python practice
+		<ul>
+			<li>How to implement and train deep nets with Pytorch</li>
+			<li>Get familiar with Open-unmix</li>
+			<li>Reach state of the art performance</li>
+		</ul></li>
+	</ul>
 
 </section>
 
@@ -806,39 +829,54 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Generative source separation: inference</h1>
+	<h1>Inference for generative separation</h1>
 	<img width="100%" style="margin-top:1%; float:left" src="assets/generative_test.svg" alt="">
 	<ul style="margin-top:5%;">
 		<li>Testing requires inference of the latent variables ("noise")</li>
 	</ul>
 </section>
 
-
 <section>
-	<h1>Generative source separation: recent pointers</h1>
-	<img width="20%" style="margin-top:1%; float:right" src="assets/iterative_generative_test.svg" alt="">
-	<div width="70%" style="margin-top:1%;">
-	<ul>Rejection sampling with Variational autoencoders
-		<li style="color:gray">
-				S. Leglaive et al. "A variance modeling framework based on variational autoencoders for speech enhancement" MLSP, 2018.
-		</li>
-		<li  style="color:gray">
-				Y. Bando  et al. "Statistical speech enhancement based on probabilistic integration of variational autoencoder and non-negative matrix factorization", ICASSP 2018
-		</li>
-	</ul>
-	<p>
-	<ul>Rejection sampling with GANs
-		<li style="color:gray">
-				Y. Subakan et al. "Generative adversarial source separation", ICASSP 2018.
-		</li>
-	</ul>
-<p>
-<ul>Inference with encoder networks
-	<li style="color:gray">
-			M. Pariente et al. "A statistically principled and computationally efficient approach to speech enhancement using variational autoencoders" arXiv, 2019.
-	</li>
-</ul>
-</div>
+	<style>
+		.container{
+		    display: flex;
+		}
+		.col1{
+		    flex: 3;
+		}
+		.col2{
+		    flex: 1;
+		}
+	</style>
+
+	<h1>Inference for generative separation: recent pointers</h1>
+	<div class="container">
+		<div class="col1">
+			<ul>Rejection sampling with Variational autoencoders
+				<li style="color:gray">
+						S. Leglaive et al. "A variance modeling framework based on variational autoencoders for speech enhancement" MLSP, 2018.
+				</li>
+				<li  style="color:gray">
+						Y. Bando  et al. "Statistical speech enhancement based on probabilistic integration of variational autoencoder and non-negative matrix factorization", ICASSP 2018
+				</li>
+			</ul>
+			<p>
+			<ul>Rejection sampling with GANs
+				<li style="color:gray">
+						Y. Subakan et al. "Generative adversarial source separation", ICASSP 2018.
+				</li>
+			</ul>
+		<p>
+		<ul>Inference with encoder networks
+			<li style="color:gray">
+					M. Pariente et al. "A statistically principled and computationally efficient approach to speech enhancement using variational autoencoders" arXiv, 2019.
+			</li>
+		</ul>
+		</div>
+		<div class="col2">
+			<img width="100%" style="margin-top:1%; float:right" src="assets/iterative_generative_test.svg" alt="">
+		</div>
+	</div>
 </section>
 
 <section>
