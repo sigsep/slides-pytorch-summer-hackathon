@@ -93,43 +93,61 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section> -->
 
 <section>
-	<h1>Motivations</h1>
+	<h1>Unmatched state of the art</h1>
 	<ul>
-		<li>Intense past research
+		<li>Intense community-based evaluations
 		<ul>
-			<li>Many evaluation campaigns: MIREX, SiSEC</li>
-			<li>Recent breakthroughs: <strong>separation works</strong></li>
+			<li>International campaigns: MIREX, SiSEC</li>
+			<li>Not-so-recent fact: <strong>separation with DNN works</strong></li>
 		</ul>
-		<li>Difficult topic
+		<p>
+		<img width="30%" style="float:right; margin-top:1%;" src="assets/stefanyuki.svg" alt="">
+		<li  style="margin-top:5%;">State of the art: SONY corporation systems
 		<ul>
-			<li>Signal processing skills</li>
-			<li>Deep learning experience</li>
-		</ul>
-		</li>
-		<li>Objectives of this tutorial
+			<h6 style="color:gray">S. Uhlich et al. "Deep neural network based instrument extraction from music." ICASSP 2015.</li>
+			</h6>
+			$\Rightarrow$ Vocals SDR: 5dB (SiSEC 2016), 6.3dB (SiSEC 2018)
+		</li></ul>
+		<p>
+
+		<li style="margin-top:10%;">Open implementations not matching state of the art
 		<ul>
-			<li>Basics of signal processing, basics of DNN</li>
-			<li>Understand an open-source state of the art system</li>
-			<li>Implement it!</li>
+			<li><a href=https://github.com/MTG/DeepConvSep><i class="fab fa-github"></i>/MTG/DeepConvSep</a> (349<i class="fa fa-star" aria-hidden="true"></i>) 2.5 dB vocals SDR
+			<div style="color:gray"><font size="4">P. Chandna et al. "Monoaural audio source separation using deep convolutional neural networks", LVA-ICA, 2017.</font></div>
+			</li>
+			<li><a href=https://github.com/f90/Wave-U-Net><i class="fab fa-github"></i>/f90/Wave-U-Net</a> (309<i class="fa fa-star" aria-hidden="true"></i>) 4.6 dB vocals SDR
+			<div style="color:gray"><font size="4">D. Stoller "Wave-u-net: A multi-scale neural network for end-to-end audio source separation." arXiv, 2018.</font></div>
+			</li>
 		</ul>
 	</ul>
-	<img width="30%" style="float:right; margin-top:30%;" src="assets/stefanyuki.svg" alt="">
-		<p style="margin-top:15%;">
-			<a href="sigsep.github.io/tutorials">sigsep.github.io/tutorials</a>
+</section>
+
+<section>
+	<h1>Motivations of this tutorial</h1>
+
 </section>
 
 <section>
 	<h1>Tutorial general outline</h1>
 	<ul>
 		<li>Signal processing basics</li>
+		<li>Evaluating source separation</li>
+		<li>Datasets</li>
+		<li><font color="red">Hands on oracle separation</font></li>
+		<p>
 		<li>A brief history of music separation</li>
-		<li>Evaluation and datasets</li>
 		<li>A starter on deep neural networks</li>
 		<li>Discriminative and generative separation</li>
-		<li>An introduction to training</li>
-		<li>The open-unmix baseline model</li>
-		<li>Training tricks</l1>
+		<li><font color="red">Hands on using open-unmix</font></li>
+		<p>
+		<li>The open-unmix model</li>
+		<li>Training a DNN</li>
+		<li><font color="red">Hands on training on pytorch</font></li>
+		<p>
+		<li>Training the open-unmix</li>
 		<li>Testing tricks</li>
+		<li><font color="red">Hands on testing tricks with open-unmix</font></li>
+		<p>
 		<li>Conclusion</li>
 	</ul>
 </section>
@@ -159,18 +177,6 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Signal processing</h1>
-	<div class="practice">
-		<h2>Hands on</h2>
-		<ul>
-			<li>Start the notebook session</li>
-			<li>For one track, display waveforms, play some audio</li>
-			<li>Display spectrogram of mixture</li>
-		</ul>
-	</div>
-</section>
-
-<section>
 	<h2>Spectral analysis as pre-whitening</h2>
 	<img style="float:right" width="50%" src="assets/fourier_whitening.svg" alt="">
 	<ul>
@@ -183,15 +189,6 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<!-- <h1>Time-frequency representations</h1> -->
 	<h2>Spectral analysis as pre-whitening</h2>
 	<img width="90%" src="assets/STFT.gif" alt="">
-</section>
-
-<section>
-	<h1>Filtering</h1>
-	<h2>Hands on</h2>
-	<ul class="practice">
-	<li>Get spectrograms of the sources</li>
-	<li>Display the corresponding soft-mask for vocals</li>
-	<li>Apply it on the mixture, reconstruct and listen to the result</li>
 </section>
 
 <section>
@@ -224,106 +221,60 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>A brief history of separation</h1>
-	<h2>The big picture</h2>
-	<div class="centered">
-		<img width="90%" class="stretch" src="assets/discriminative_big_picture.svg" alt="">
-	</div>
-	<h6 style="margin-top:3%; color:gray">
-	Rafii, Zafar, et al. "An Overview of Lead and Accompaniment Separation in Music."
-	IEEE/ACM TASLP 26.8 (2018): 1307-1335.
+	<h1>Evaluating quality</h1>
+	<img style="float:right" width="100%" src="assets/evaluation_big_picture.svg" alt="">
+</section>
+
+<section>
+	<h1>Perceptual evaluation: hot topics</h1>
+
+	<ul>
+		<li>Which questions to ask ?
+			<p>
+			<h6 style="margin-top:3%; color:gray">
+			E. Cano et al. "The dimensions of perceptual quality of sound source separation." ICASSP, 2018.
+			</h6>
+		</li>
+		<li>Referenceless evaluation
+			<h6 style="margin-top:3%; color:gray">
+			E. Grais et al. "Referenceless Performance Evaluation of Audio Source Separation using Deep Neural Networks." arXiv:1811.00454 (2018)</li>
+			</h6>
+		<li>Crowdsourced evaluations
+			<h6 style="margin-top:3%; color:gray">
+			M. Cartwright et al. "Crowdsourced Pairwise-Comparison for Source Separation Evaluation." ICASSP, 2018.</li>
+			</h6>
+</section>
+
+<section>
+	<h1>Objective evaluation</h1>
+	<h2><img width="50px"src="assets/matlab.jpg" style="position:relative;left:0px; top:10px;" alt="">BSSeval v3</h2>
+	All metrics in dB. The higher, the better:
+	<ul>
+		<li><strong>SDR</strong>: Source to distortion ratio. <em>Error in the estimate</em>.</li>
+		<li><strong>SIR</strong>: Source to interference ratio. <em>Presence of other sources</em>.</li>
+		<li><strong>SAR</strong>: Source to artifacts ratio. <em>Amount of artificial noise</em>.</li>
+	</ul>
+	<p>
+	<h6 style="margin-top:2%; color:gray">
+	E. Vincent et al. "Performance measurement in blind audio source separation."
+	IEEE TASLP 14.4 (2006): 1462-1469.
+	</h6>
+	<h2><img width="50px"src="assets/python.jpg" style="position:relative;left:0px; top:25px;" alt="">museval (BSSeval v4)</i></h2>
+	<ul>
+		<li><strong>Better</strong> matching filters computed track-wise </li>
+		<li><strong>Faster</strong> 10x</li>
+	</ul>
+	<h6 style="margin-top:2%; color:gray">
+	F. Stöter et al. "The 2018 Signal Separation Evaluation Campaign."
+	LVA/ICA 2018.
 	</h6>
 </section>
 
 <section>
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<h2>Harmonicity for the lead</h2>
-		<img style="float:right" width="70%" src="assets/model_based/ReviewPaper_ Figure2.svg" alt="">
-		<ul>
-			<li>Pitch detection</li>
-			<li>Clean voices</li>
-			<li>"Metallic" artifacts</li>
-		</ul>
-		<!-- an example -->
-	</section>
-
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<h2>Redundancy for the accompaniment: NMF</h2>
-		<img style="float:right" width="38%" src="assets/model_based/ReviewPaper_ Figure3.svg" alt="">
-		<ul>
-			<li>Spectral templates</li>
-			<li>Low-rank assumptions</li>
-			<li>Bad generalization</li>
-		</ul>
-		<!-- an example -->
-	</section>
-
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<h2>Redundancy for the accompaniment: RPCA</h2>
-		<p>
-		<img style="margin-top:4%;" width="90%" src="assets/model_based/ReviewPaper_ Figure4.svg" alt=""><p>
-		<ul>
-			<li>Low-rank for music</li>
-			<li>Vocals as unstructured</li>
-			<li>Strong interferences in general</li>
-		</ul>
-		<!-- an example -->
-	</section>
-
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<h2>Redundancy for the accompaniment: REPET</h2>
-		<img style="float:right; margin-top:4%" width="65%" src="assets/model_based/ReviewPaper_ Figure5.svg" alt="">
-		<ul>
-			<li>Repetitive music</li>
-			<li>Non-repetitive vocals</li>
-			<li>Solos in vocals</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<h2> Modeling both lead and accompaniment: source filter</h2>
-		<img style="float:right" width="70%" src="assets/model_based/ReviewPaper_ Figure7.svg" alt="">
-		<ul>
-			<li>Harmonic vocals</li>
-			<li>Low-rank music</li>
-			<li>Poor generalization</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<img style="float:right" width="43%" src="assets/model_based/ReviewPaper_ Figure8.svg" alt="">
-		<h2>Cascaded methods</h2>
-		<ul>
-			<li>Combining methods</li>
-			<li>Handcrafted systems</li>
-			<li>Poor generalization</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>A brief history: model-driven methods</h1>
-		<h2>Fusion of methods</h2>
-		<img style="float:right" width="49%" src="assets/model_based/ReviewPaper_ Figure9.svg" alt="">
-		<ul>
-			<li>Combining in a data-driven way</li>
-			<li>Doing best than all</li>
-			<li>Computationally demanding</li>
-		</ul>
-	</section>
+	<h1>Oracle evaluation</h1>
+	<img style="float:right" width="100%" src="assets/oracle_evaluation.svg" alt="">
 </section>
 
-
-<!-- DATASETS AND EVALUATION
-<section>
-	<h1>Introduction</h1>
-	<h2>Datasets and evaluation</h2>
-</section>-->
 
 <section>
 	<h1>Music separation datasets</h1>
@@ -574,38 +525,120 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 
 <section>
-	<h1>Evaluating quality</h1>
-	<h2><img width="50px"src="assets/matlab.jpg" style="position:relative;left:0px; top:10px;" alt="">BSSeval v3</h2>
-	All metrics in dB. The higher, the better:
+	<h1>Hands on oracle separation</h1>
+	<h2>Exploring musdb18</h2>
 	<ul>
-		<li><strong>SDR</strong>: Source to distortion ratio. <em>Error in the estimate</em>.</li>
-		<li><strong>SIR</strong>: Source to interference ratio. <em>Presence of other sources</em>.</li>
-		<li><strong>SAR</strong>: Source to artifacts ratio. <em>Amount of artificial noise</em>.</li>
+		<li>Start the notebook session</li>
+		<li>For one track, display waveforms, play some audio</li>
+		<li>Display spectrogram of mixture</li>
 	</ul>
-	<p>
-	<h6 style="margin-top:2%; color:gray">
-	E. Vincent et al. "Performance measurement in blind audio source separation."
-	IEEE TASLP 14.4 (2006): 1462-1469.
-	</h6>
-	<h2><img width="50px"src="assets/python.jpg" style="position:relative;left:0px; top:25px;" alt="">museval (BSSeval v4)</i></h2>
+	<h2>Oracle separation</h2>
 	<ul>
-		<li><strong>Better</strong> matching filters computed track-wise </li>
-		<li><strong>Faster</strong> 10x</li>
+		<li>Get spectrograms of the sources</li>
+		<li>Display the corresponding soft-mask for vocals</li>
+		<li>Apply it on the mixture, reconstruct and listen to the result</li>
 	</ul>
-	<h6 style="margin-top:2%; color:gray">
-	F. Stöter et al. "The 2018 Signal Separation Evaluation Campaign."
-	LVA/ICA 2018.
+	<h2>Performance evaluation</h2>
+	<ul>
+		<li>Loop over some musdb tracks</li>
+		<li>Evaluate oracle separation system on musdb</li>
+		<li>Compare to state of the art (SiSEC18)</li>
+	</ul>
+</section>
+
+<section>
+	<h1>A brief history of separation</h1>
+	<h2>The big picture</h2>
+	<div class="centered">
+		<img width="90%" class="stretch" src="assets/discriminative_big_picture.svg" alt="">
+	</div>
+	<h6 style="margin-top:3%; color:gray">
+	Rafii, Zafar, et al. "An Overview of Lead and Accompaniment Separation in Music."
+	IEEE/ACM TASLP 26.8 (2018): 1307-1335.
 	</h6>
 </section>
 
 <section>
-	<h1>Evaluating quality</h1>
-	<h2>Hands-on</h2>
-	<ul class="practice">
-		<li>Loop over some musdb tracks</li>
-		<li>Evaluate our separation system on musdb</li>
-		<li>Compare to state of the art (SiSEC18)</li>
-	</ul>
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Harmonicity for the lead</h2>
+		<img style="float:right" width="70%" src="assets/model_based/ReviewPaper_ Figure2.svg" alt="">
+		<ul>
+			<li>Pitch detection</li>
+			<li>Clean voices</li>
+			<li>"Metallic" artifacts</li>
+		</ul>
+		<!-- an example -->
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Redundancy for the accompaniment: NMF</h2>
+		<img style="float:right" width="38%" src="assets/model_based/ReviewPaper_ Figure3.svg" alt="">
+		<ul>
+			<li>Spectral templates</li>
+			<li>Low-rank assumptions</li>
+			<li>Bad generalization</li>
+		</ul>
+		<!-- an example -->
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Redundancy for the accompaniment: RPCA</h2>
+		<p>
+		<img style="margin-top:4%;" width="90%" src="assets/model_based/ReviewPaper_ Figure4.svg" alt=""><p>
+		<ul>
+			<li>Low-rank for music</li>
+			<li>Vocals as unstructured</li>
+			<li>Strong interferences in general</li>
+		</ul>
+		<!-- an example -->
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Redundancy for the accompaniment: REPET</h2>
+		<img style="float:right; margin-top:4%" width="65%" src="assets/model_based/ReviewPaper_ Figure5.svg" alt="">
+		<ul>
+			<li>Repetitive music</li>
+			<li>Non-repetitive vocals</li>
+			<li>Solos in vocals</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2> Modeling both lead and accompaniment: source filter</h2>
+		<img style="float:right" width="70%" src="assets/model_based/ReviewPaper_ Figure7.svg" alt="">
+		<ul>
+			<li>Harmonic vocals</li>
+			<li>Low-rank music</li>
+			<li>Poor generalization</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<img style="float:right" width="43%" src="assets/model_based/ReviewPaper_ Figure8.svg" alt="">
+		<h2>Cascaded methods</h2>
+		<ul>
+			<li>Combining methods</li>
+			<li>Handcrafted systems</li>
+			<li>Poor generalization</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>A brief history: model-driven methods</h1>
+		<h2>Fusion of methods</h2>
+		<img style="float:right" width="49%" src="assets/model_based/ReviewPaper_ Figure9.svg" alt="">
+		<ul>
+			<li>Combining in a data-driven way</li>
+			<li>Doing best than all</li>
+			<li>Computationally demanding</li>
+		</ul>
+	</section>
 </section>
 
 
@@ -746,22 +779,20 @@ An audio demo of the critical impact of engineering for the “same” system.
 <section>
 	<h1>Discriminative source separation: one source</h1>
 	<img width="48%" style="margin-top:5%; float:left" src="assets/discriminative_main_lines.svg" alt="">
-	<img width="20%" style="float:left" src="assets/vanilla.svg" alt="">
-	<ul style="margin-top:5%;">
+	<img width="20%" style="margin-top:7%; float:left" src="assets/vanilla.svg" alt="">
+	<ul style="margin-top:3%;">
 		<li>Directly get source from mixture</li>
 		<li>Straightforward inference</li>
-		<li>Requires mixtures for training</li>
+		<li>Requires paired mixtures for training</li>
 	</ul>
 </section>
 
 <section>
 	<h1>Discriminative source separation: all sources</h1>
 	<img width="100%" style="float:center" src="assets/vanilla_lstm_test.svg" alt="">
-	<ul class="practice">
-		<li>Load pre-trained models</li>
-		<li>Combine estimates with signal processing</li>
-		<li>Evaluate on MUSDB18</li>
-	</ul>
+	<h6 style="margin-top:4%; color:gray">
+		S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." (2017) ICASSP.
+	</h6>
 </section>
 
 
@@ -781,6 +812,44 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<li>Testing requires inference of the latent variables ("noise")</li>
 	</ul>
 </section>
+
+
+<section>
+	<h1>Generative source separation: recent pointers</h1>
+	<img width="20%" style="margin-top:1%; float:right" src="assets/iterative_generative_test.svg" alt="">
+	<div width="70%" style="margin-top:1%;">
+	<ul>Rejection sampling with Variational autoencoders
+		<li style="color:gray">
+				S. Leglaive et al. "A variance modeling framework based on variational autoencoders for speech enhancement" MLSP, 2018.
+		</li>
+		<li  style="color:gray">
+				Y. Bando  et al. "Statistical speech enhancement based on probabilistic integration of variational autoencoder and non-negative matrix factorization", ICASSP 2018
+		</li>
+	</ul>
+	<p>
+	<ul>Rejection sampling with GANs
+		<li style="color:gray">
+				Y. Subakan et al. "Generative adversarial source separation", ICASSP 2018.
+		</li>
+	</ul>
+<p>
+<ul>Inference with encoder networks
+	<li style="color:gray">
+			M. Pariente et al. "A statistically principled and computationally efficient approach to speech enhancement using variational autoencoders" arXiv, 2019.
+	</li>
+</ul>
+</div>
+</section>
+
+<section>
+	<h1>Hands on using open-unmix</h1>
+	<ul>
+		<li>Installation and imports</li>
+		<li>Separate musdb18 tracks</li>
+		<li>Compute scores and compare with SiSEC18</li>
+	</ul>
+</section>
+
 
 
 <section>
@@ -861,7 +930,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<li>All samples per epoch</li>
 	</ul>
 </section>
-
+<!--
 <section>
 	<h1>Hierarchical sampling in audio</h1>
 	<img width="50%" style="margin-top:6%; float:left" src="assets/results/PLOT_17/loss.svg" alt="">
@@ -872,7 +941,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<h6 style="margin-top:30%; color:gray">
 	B. Recht. "Beneath the valley of the noncommutative arithmetic-geometric mean inequality: conjectures, case-studies. and consequences." (2012). Technical report.
 	</h6>
-</section>
+</section> -->
 
 <section>
 	<h1>Gradient descent</h1>
@@ -997,16 +1066,9 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 
 <section>
 	<h1>Generative training</h1>
-	big picture of generative modelling vs discriminative
-</section>
-<section>
-	<h1>Generative training</h1>
-	Inference in generative models for separation
-</section>
-<section>
-	<h1>Generative training</h1>
 	trends: VAE, GANs
 </section>
+
 <section>
 	<h1>Generative training</h1>
 	Difference between generative and discriminative adversarial
