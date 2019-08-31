@@ -516,6 +516,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<ul>
 		<li>100 train / 50 test full tracks</li>
 		<li>Mastered with pro. digital audio workstations</li>
+		<li>compressed STEMS (<code>MUSDB18</code>) and uncompressed WAV <code>MUSDB18-HQ</code>
 		<li>Parser and Evaluation tools in <i class="fab fa-python"></i></li>
 		<li><a ref=https://sigsep.github.io/datasets/musdb.html>https://sigsep.github.io/datasets/musdb.html</a></li>
 	</ul>
@@ -1351,6 +1352,75 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
 	</section>
 </section> -->
+
+<section>
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2>Standard approach</h2>
+		<ul>
+			<li>imagine to learn $Y = \frac{model(X * \beta)}{\alpha}$ (UHL1)</li>
+			<li>if we use normalization layers, our target magnitude is wrong</li>
+			<li>Pros: little overfitting, learns quickly (> 5dB)</li>
+			<li>Cons: hard to improve performance when true magnitude is required (tacotron) (</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2>...if you apply instance norm</h2>
+		<img width="80%" src="assets/loss_instance_norm.png" alt="">
+	</section>
+
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2>Lets learn the real magnitude</h2>
+		<img width="80%" src="assets/loss_realmagnitude.png" alt="">
+
+		<ul>
+			<li>We changed one line of code: $Y = model(X) \cdot X$</li>
+			<li>Performance, we lost ~2dB SDR</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2>Lets learn the real magnitude</h2>
+		<img width="80%" src="assets/loss_regularized.png" alt="">
+
+		<ul>
+			<li>we added random excerpts, more patience</li>
+			<li>introduce fixed learning rate decay (120 epochs)</li>
+			<li>back to 5.6 dB SDR</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2>Select the best model</h2>
+		<img width="80%" src="assets/loss_umxselection.png" alt="">
+	
+		<ul>
+			<li>add data augmentations and dynamically mix the sources together</li>
+			<li>take sources from random tracks</li>
+			<li>add weight decay</li>
+			<li>increase dropout rate</li>
+			<li>schedule learning rate decay dynamically on plateeua (*0.1)</li>
+		</ul>
+	</section>
+
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2>The final model (<code>UMX</code>)</h2>
+		<img width="80%" src="assets/loss_umx.png" alt="">
+	</section>
+
+	<section>
+		<h1>Predicting True Magnitudes</h1>
+		<h2><code>UMX-Pro</code></h2>
+		<img width="80%" src="assets/loss_umx.png" alt="">
+	</section>
+
+</section>
 
 <section>
 	<section>
