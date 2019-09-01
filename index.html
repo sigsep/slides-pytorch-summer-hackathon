@@ -85,7 +85,6 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<li>Music Education</li>
 		<li>Pre-processing for MIR</li>
 	</ul>
-	<i style="float:right; margin-top:50%;" class="fa fa-headphones"></i>
 </section>
 
 <!-- <section>
@@ -128,8 +127,8 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<ul>
 		<li>Understand source separation
 		<ul>
-			<li>Quick overview of the topic</li>
 			<li>Signal processing aspects</li>
+			<li>Quick overview of the topic</li>
 			<li>Discriminative and generative methods</li>
 		</ul></li>
 		<p>
@@ -143,11 +142,16 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<li>Python practice
 		<ul>
 			<li>How to implement and train deep nets with Pytorch</li>
-			<li>Get familiar with Open-unmix</li>
-			<li>Reach state of the art performance</li>
+			<li>Official release of <code>open-unmix</code> today!
+				<a href=https://github.com/sigsep/open-unmix-pytorch><i class="fab fa-github"></i>/sigsep/open-unmix-pytorch</a>
+			</li>
+			<li>MIT-licensed state of the art performance</li>
 		</ul></li>
 	</ul>
-
+	<div style="margin-top:8%; color:gray">
+	All slides and material available at:
+	<a href=https://github.com/sigsep><i class="fab fa-github"></i>/sigsep</a>
+</div>
 </section>
 
 <section>
@@ -161,15 +165,15 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<li>A brief history of music separation</li>
 		<li>A starter on deep neural networks</li>
 		<li>Discriminative and generative separation</li>
-		<li><font color="red">Hands on using open-unmix</font></li>
+		<li><font color="red">Hands on using <code>open-unmix</code></font></li>
 		<p>
-		<li>The open-unmix model</li>
 		<li>Training a DNN</li>
+		<li>Audio datasets</li>
 		<li><font color="red">Hands on training on pytorch</font></li>
 		<p>
-		<li>Training the open-unmix</li>
+		<li>The <code>open-unmix</code> story</li>
 		<li>Testing tricks</li>
-		<li><font color="red">Hands on testing tricks with open-unmix</font></li>
+		<li><font color="red">Hands on testing tricks with <code>open-unmix</code></font></li>
 		<p>
 		<li>Conclusion</li>
 	</ul>
@@ -535,7 +539,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>The musdb18 dataset</h1>
+	<h1>The MUSDB18 dataset</h1>
 	<ul>
 		<li>100 train / 50 test full tracks</li>
 		<li>Mastered with pro. digital audio workstations</li>
@@ -550,7 +554,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 <section>
 	<h1>Hands on oracle separation</h1>
-	<h2>Exploring musdb18</h2>
+	<h2>Exploring MUSDB18</h2>
 	<ul>
 		<li>Start the notebook session</li>
 		<li>For one track, display waveforms, play some audio</li>
@@ -839,15 +843,9 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 <section>
 	<style>
-		.container{
-		    display: flex;
-		}
-		.col1{
-		    flex: 3;
-		}
-		.col2{
-		    flex: 1;
-		}
+		.container{display: flex;}
+		.col1{flex: 3;}
+		.col2{flex: 1;}
 	</style>
 
 	<h1>Inference for generative separation: recent pointers</h1>
@@ -881,10 +879,10 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Hands on using open-unmix</h1>
+	<h1>Hands on using <code>open-unmix</code></h1>
 	<ul>
 		<li>Installation and imports</li>
-		<li>Separate musdb18 tracks</li>
+		<li>Separate MUSDB18 tracks</li>
 		<li>Compute scores and compare with SiSEC18</li>
 	</ul>
 </section>
@@ -892,9 +890,9 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 
 <section>
-	<h1>An introduction to training</h1>
+	<h1>Training a DNN</h1>
 	<ul>
-		<li>Sampling</li>
+		<li>Vocabulary</li>
 		<li>Gradient descent</li>
 		<li>Discriminative training</li>
 		<li>Generative training</li>
@@ -902,85 +900,24 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Sampling vocabulary</h1>
+	<h1>Vocabulary</h1>
 	<img  style="margin-top:5%" width="100%" src="assets/training_dataset.svg" alt="">
 </section>
 
 <section>
-	<h1>Sampling vocabulary</h1>
+	<h1>Vocabulary</h1>
 	<img  style="margin-top:5%" width="100%" src="assets/training_dataset_batch.svg" alt="">
 </section>
 
 <section>
-	<h1>Sampling vocabulary</h1>
+	<h1>Vocabulary</h1>
 	<img  style="margin-top:5%" width="100%" src="assets/training_dataset_learning.svg" alt="">
 </section>
 
 <section>
-	<h1>Sampling vocabulary</h1>
+	<h1>Vocabulary</h1>
 	<img  style="margin-top:5%" width="100%" src="assets/one_epoch.gif" alt="">
 </section>
-
-<section>
-	<h1>Sampling strategy in audio</h1>
-	<img width="40%" style="margin-top:9%; float:left" src="assets/audio_dataset.svg" alt="">
-	<div style="margin-top:42%">
-		<ul>
-			<li>Audio datasets are made of tracks</li>
-			<li>Samples are short excerpts</li>
-		</ul>
-	<p>
-	$\Rightarrow$ How to organize sampling?
-	</div>
-</section>
-
-<section>
-	<h1>Hierarchical sampling in audio</h1>
-	<img width="62%" style="float:left" src="assets/twsw.gif" alt="">
-	<ul>
-		<li>Non unique tracks in batch</li>
-		<li>Not all samples per epoch</li>
-	</ul>
-</section>
-
-<section>
-	<h1>Hierarchical sampling in audio</h1>
-	<img width="62%" style="float:left" src="assets/twosw.gif" alt="">
-	<ul>
-		<li>Unique tracks in batch</li>
-		<li>Not all samples per epoch</li>
-	</ul>
-</section>
-
-<section>
-	<h1>Hierarchical sampling in audio</h1>
-	<img width="62%" style="float:left" src="assets/twswo.gif" alt="">
-	<ul>
-		<li>Non unique tracks in batch</li>
-		<li>All samples per epoch</li>
-	</ul>
-</section>
-
-<section>
-	<h1>Hierarchical sampling in audio</h1>
-	<img width="62%" style="float:left" src="assets/twoswo.gif" alt="">
-	<ul>
-		<li>Unique tracks in batch</li>
-		<li>All samples per epoch</li>
-	</ul>
-</section>
-<!--
-<section>
-	<h1>Hierarchical sampling in audio</h1>
-	<img width="50%" style="margin-top:6%; float:left" src="assets/results/PLOT_17/loss.svg" alt="">
-	<ul style="margin-top:5%;">
-		<li>Unique tracks per batch is slower</li>
-		<li>All samples per epoch is faster</li>
-	</ul>
-	<h6 style="margin-top:30%; color:gray">
-	B. Recht. "Beneath the valley of the noncommutative arithmetic-geometric mean inequality: conjectures, case-studies. and consequences." (2012). Technical report.
-	</h6>
-</section> -->
 
 <section>
 	<h1>Gradient descent</h1>
@@ -1029,6 +966,38 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 
 <section>
+	<h1>Gradient descent</h1>
+	<h2>Regularization with dropout</h2>
+	<img  style="margin-top:5%; float:left" width="30%" src="assets/dropout.gif" alt="">
+	<ul style="margin-top:5%;">
+		<li>Parts of the net randomly set to 0</li>
+		<li>No unit should be critical: <i>regularization</i></li>
+		<li>Probabilistic interpretation</li>
+	</ul>
+	<h6 style="margin-top:28%; color:gray">
+		N Srivastava, et al. "Dropout: a simple way to prevent neural networks from overfitting". JMLR. (2014) 15(1), 1929-1958.
+	</h6>
+</section>
+
+<section>
+	<h1>Gradient descent</h1>
+	<h2>Data augmentation</h2>
+	<ul>
+		<li>Artificially increase the size of the dataset</li>
+		<li>Active research topic
+			<ul style="color:gray">
+				<li>S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." (2017) ICASSP</li>
+				<li>A. Cohen-Hadria, et al. "Improving singing voice separation using Deep U-Net and Wave-U-Net with data augmentation."" arXiv 2019.
+			</ul>
+		</li>
+		<li>Overlap<p>
+			<img width="70%" style="float:center" src="assets/sample_overlap.svg" alt="">
+		</li>
+		<li>Random gains</li>
+	</ul>
+</section>
+
+<section>
 	<h1>Discriminative training</h1>
 	<img  style="margin-top:5%; float:center" width="20%" src="assets/sample_supervised.svg" alt="">
 </section>
@@ -1036,9 +1005,6 @@ An audio demo of the critical impact of engineering for the “same” system.
 <section>
 	<h1>Discriminative training, in audio</h1>
 	<img width="100%" style="float:center" src="assets/sample_supervised_temporal.svg" alt="">
-	<ul class="practice">
-		<li>Build a naive data sampler</li>
-	</ul>
 </section>
 
 <section>
@@ -1093,475 +1059,279 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		</h6>
 	</section>
 
-	<section>
-		<h1>Practice: discriminative training</h1>
-		<ul>
-			<li>Load the MUSDB18 dataset</li>
-			<li>Create a model, an optimizer</li>
-			<li>Sample excerpts, compute loss</li>
-			<li>Train the model</li>
-		</ul>
-	</section>
-
 <section>
-	<h1>Generative training</h1>
-	trends: VAE, GANs
+	<h1>Generative training: Generative Adversarial Networks</h1>
+	<img width="80%" style="margin-top:1%; float:left" src="assets/GAN_training.svg" alt="">
+</section>
+<section>
+	<h1>Generative training: Variational Auto-Encoders</h1>
+	<img width="100%" style="margin-top:1%; float:left" src="assets/VAE_training.svg" alt="">
 </section>
 
 <section>
-	<h1>Generative training</h1>
-	Difference between generative and discriminative adversarial
-</section>
-
-
-<!-- <section>
-	<h1>Vanilla DNN for separation: evaluation</h1>
-	<img width="90%" style="float:left" src="assets/results/PLOT_1/boxplot.svg" alt="">
-	<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
-</section> -->
-
-<!--
-<section>
-	<h1>Outline</h1>
-	<h2>Choosing the right representation</h2>
-	<ul>
-		<li>Input dimensionality reduction</li>
-		<li>Fourier transforms parameters</li>
-		<li>Standardization</li>
-	</ul>
+	<h1>Audio datasets in <code>open-unmix</code></h1>
+	<h2>Paired sampling: AlignedDataset</h2>
+	<img width="100%" style="float:left" src="assets/AlignedDataset.svg" alt="">
 </section>
 
 <section>
-	<section>
-		<h1>Choosing the right representation: standardization</h1>
-		<img width="47%" style="float:left" src="assets/standardization.svg" alt="">
-		<ul>
-			<li>Compensate different features scales</li>
-			<li>Classical pre-processing</li>
-			<li>Either dataset stats or trainable
-		</ul>
-	</section>
-	<section>
-		<h1>Choosing the right representation: standardization</h1>
-		<img width="49%" style="float:center" src="assets/results/PLOT_2/loss.svg" alt="">
-		<img width="49%" style="float:center" src="assets/results/PLOT_2/boxplot.svg" alt="">
-		<ul>
-			<li>Input/output scaling always lead to better loss</li>
-			<li>Trainable is better than fixed</li>
-			<li>Good loss needs scaling, but no influence on SDR</li>
-		</ul>
-		<p>
-		<ul>
-			<li>We use scaling all the time</li>
-		</ul>
-	</section>
+	<h1>Audio datasets in <code>open-unmix</code></h1>
+	<h2>Unpaired sampling: SourceFolderDataset</h2>
+	<img width="100%" style="float:left" src="assets/SourceFolderDataset.svg" alt="">
 </section>
 
 <section>
-	<section>
-		<h1>Choosing the right representation: Fourier transform</h1>
-		<img width="80%" style="margin-top:5%; float:center" src="assets/FFT_parameters.svg" alt="">
-		<ul style="margin-top:5%;">
-			<li>Network is always fed 360ms of context</li>
-		</ul>
-	</section>
-	<section>
-		<h1>Choosing the right representation: Fourier transform</h1>
-		<img width="70%" style="float:center" src="assets/results/PLOT_3/boxplot.svg" alt="">
-		<ul>
-			<li><strong>Frames</strong>: 92ms=4096 samples @ 44k1kHz</li>
-			<li><strong>Overlap</strong>: 75%</li>
-		</ul>
-			<p>
-			<ul>
-				<li>Long frames, large overlap</li>
-			</ul>
-		</ul>
-	</section>
+	<h1>Audio datasets in <code>open-unmix</code></h1>
+	<h2>Paired/Unpaired sampling: FixedSourcesTrackFolderDataset</h2>
+	<img width="100%" style="float:left" src="assets/FixedSourcesTrackFolderDataset.svg" alt="">
 </section>
 
 <section>
-	<section>
-		<h1>Choosing the right representation</h1>
-		<h2>Input dimensionality reduction</h2>
-		<img width="54%" style="float:left" src="assets/input_dimensionality_reduction.svg" alt="">
-		<ul>
-			<li>Reduce number of parameters?
-				<ul>
-					<li>From 6 million to 500k</li>
-				</ul>
-			</li>
-			<li>Fixed or trainable reduction</li>
-			<li>Should we handcraft features?</li>
-		</ul>
-	</section>
-	<section>
-		<h1>Choosing the right representation</h1>
-		<h2>Input dimensionality reduction</h2>
-		<img width="90%" style="float:center" src="assets/results/PLOT_4/boxplot.svg" alt="">
-		<ul>
-			<li>Reducing dimension
-				<ul>
-					<li>Reduces model size</li>
-					<li>Gives bettter performance</li>
-				</ul>
-			</li>
-		</ul>
-
-		<p>
-		<ul>
-			<li>Don't handcraft features, train them</li>
-		</ul>
-		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
-	</section>
+	<h1>Audio datasets in <code>open-unmix</code></h1>
+	<h2>Paired sampling: VariableSourcesTrackFolderDataset</h2>
+	<img width="100%" style="float:left" src="assets/VariableSourcesTrackFolderDataset.svg" alt="">
 </section>
 
 <section>
-	<h1>Outline</h1>
-	<h2>DNN Structure: optimizing the vanilla net</h2>
-	<img width="22%" style="margin-top:5%; float:left" src="assets/fancy_vanilla.svg" alt="">
+	<h1>Audio datasets</h1>
+	<h2>Hierarchical sampling</h2>
+	<img width="40%" style="margin-top:8%; float:left" src="assets/audio_dataset.svg" alt="">
+	<div style="margin-top:2%">
+		<ul>
+			<li>Audio datasets are made of tracks</li>
+			<li>Samples are short excerpts</li>
+		</ul>
 	<p>
-	<ul style="margin-top:5%;">
-		<li>Network dimensions</li>
-		<li>LSTM vs BLSTM</li>
-		<li>Skip connection</li>
+	$\Rightarrow$ How to organize sampling?
+	</div>
+</section>
+
+<section>
+	<h1>Audio datasets</h1>
+	<h2>Hierarchical sampling</h2>
+	<img width="62%" style="float:left" src="assets/twsw.gif" alt="">
+	<ul>
+		<li>Non unique tracks in batch</li>
+		<li>Not all samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Audio datasets</h1>
+	<h2>Hierarchical sampling</h2>
+	<img width="62%" style="float:left" src="assets/twosw.gif" alt="">
+	<ul>
+		<li>Unique tracks in batch</li>
+		<li>Not all samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Audio datasets</h1>
+	<h2>Hierarchical sampling</h2>
+	<img width="62%" style="float:left" src="assets/twswo.gif" alt="">
+	<ul>
+		<li>Non unique tracks in batch</li>
+		<li>All samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Audio datasets</h1>
+	<h2>Hierarchical sampling</h2>
+	<img width="62%" style="float:left" src="assets/twoswo.gif" alt="">
+	<ul>
+		<li>Unique tracks in batch</li>
+		<li>All samples per epoch</li>
+	</ul>
+</section>
+
+<section>
+	<h1>Hands-on training with pytorch</h1>
+		<h2>Setting up</h2>
+			<ul>
+				<li>imports</li>
+				<li>Load the MUSDB18 dataset</li>
+				<li>Create a model, an optimizer</li>
+			</ul>
+		<h2>Training loop</h2>
+			<ul>
+				<li>Compute loss</li>
+				<li>Gradient descent</li>
+			</ul>
+		<h2>Training tricks</h2>
+			<ul>
+				<li>Learning-rate schedulers</li>
+				<li>Patience</li>
+			</ul>
+		<h2>Adapt for a SourceFolderDataset</h2>
 	</ul>
 </section>
 
 <section>
 	<section>
-		<h1>DNN structure: network dimension</h1>
-		<img width="73%" style="float:left" src="assets/structure_tuning.svg" alt="">
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="100%" src="assets/UMX1.svg" alt="">
 	</section>
 	<section>
-		<h1>DNN structure: network dimension</h1>
-		<h2>The more parameters, the better</h2>
-		<img width="40%" style="float:center" src="assets/results/PLOT_6/loss_layers_integrated.svg" alt="">
-		<img width="40%" style="float:center" src="assets/results/PLOT_6/loss_len_integrated.svg" alt="">
-		<ul style="margin-top:1%;">
-			<li>Context length not so important
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX2.svg" alt="">
+	</section>
+	<section>
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX3.svg" alt="">
+	</section>
+	<section>
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX4.svg" alt="">
+	</section>
+	<section>
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX5.svg" alt="">
+		<ul style="margin-top:5%">
+			<li class="fragment">Instance normalization removes dependency on mixture scale</li>
+			<li class="fragment">It makes the true target unreachable</li>
+		</ul>
+	</section>
+
+	<section>
+		<style>
+			.container{display: flex;}
+			.col_in_l{flex: 1;}
+			.col_in_r{flex: 3;}
+		</style>
+		<h1>Training the instancenorm version</h1>
+		<div class="container">
+			<div class="col_in_l">
+				<img  width="70%" src="assets/UMX5_vert.svg" alt="">
+			</div>
+			<div class="col_in_r">
+				<img width="100%" style="margin-top:0%" src="assets/loss_instance_norm.png" alt="">
 				<ul>
-					<li>LSTM unable to model long-term musical contexts?</li>
+					<li>Training goes well, no overfit</li>
+					<li>Good performance: 5.8 dB vocals SDR on MUSDB18</li>
+					<p>
+					<li class="fragment" style="color:red">But scale of source is wrong
+					$\Rightarrow$ problematic in some cases</li>
 				</ul>
-			</li>
-			<li>Hidden size (model dimension) has strong influene</li>
-		</ul>
-		<p>
-		<ul>
-			<li>Large models are good</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>DNN structure: network dimension</h1>
-		<h2>The more parameters, the better,  <font color="black">really?</font></h2>
-		<img width="100%" style="float:center" src="assets/results/PLOT_5/table.svg" alt="">
-		<ul style="margin-top:1%;">
-			<li>Moderate impact on SDR</li>
-			<li>Strong impact on SIR
-			<ul>
-				<li>Improves separation much</li>
-				<li>But not a huge impact as in loss</li>
-			</ul>
-		</ul>
-		<p>
-		<ul>
-			<li>Loss on spectrograms is <strong>not</strong> audio quality
-			<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
-
-		</ul>
-
-
-
+			</div>
+		</div>
 	</section>
 </section>
 
 <section>
 	<section>
-		<h1>DNN structure: LSTM vs BLSTM</h1>
-		<img width="60%" style="float:left" src="assets/structure_tuning_blstm.svg" alt="">
-	</section>
-	<section>
-		<h1>DNN structure: LSTM vs BLSTM</h1>
-		<img width="39%" style="float:left" src="assets/results/PLOT_8/loss.svg" alt="">
-		<img width="60%" style="float:center" src="assets/results/PLOT_9/boxplot.svg" alt="">
-		<p>
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX5.svg" alt="">
 		<ul>
-			<li>Loss is similar</li>
-			<li>BLSTM are better metric-wise</li>
+			<li>Let's replace instance normalization by batch normalization</li>
 		</ul>
-
-		<p>
+	</section>
+	<section>
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX6.svg" alt="">
 		<ul>
-			<li>In practice: BLSTM require the <strong>same context length at train and test</strong>
-			<p>$\Rightarrow$ chop the data into batches at test time!</li>
+			<li class="fragment">We still have scaling issues</li>
+			<div class="fragment">$\Rightarrow$ It's difficult to  keep mix scale without normalization</div>
 		</ul>
-
+		<div class="fragment" style="margin-top:2%"><i class="far fa-lightbulb"></i> Use the model to predict a filter on the mixture</div>
 	</section>
-</section>
-
-<section>
 	<section>
-		<h1>DNN structure: skip connection</h1>
-		<img width="42%" style="float:left" src="assets/structure_tuning_skip.svg" alt="">
+		<h1>The <code>open-unmix</code> (UMX) story</h1>
+		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX.svg" alt="">
 		<ul>
-			<li>Should reduce vanishing gradient</li>
-			<li>Much used in very deep nets</li>
-		</ul>
-	</section>
-	<section>
-		<h1>DNN structure: skip connection</h1>
-		<img width="39%" style="float:left" src="assets/results/PLOT_10/loss.svg" alt="">
-		<img width="60%" style="float:center" src="assets/results/PLOT_11a/boxplot.svg" alt="">
-		<ul style="margin-top:2%;">
-			<li>Improves loss slightly</li>
-			<li>No effect on overall metrics</li>
-		</ul>
-	</section>
-	<section>
-		<h1>DNN structure: skip connection</h1>
-		<img width="40%" style="float:left" src="assets/results/PLOT_11b/boxplot.svg" alt="">
-		<ul>
-			<li>Better bass and drums</li>
-		</ul>
-		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
-
-	</section>
-</section>
-
-</section> -->
-
-<!-- <section>
-	<h1>Recap: current structure for the baseline</h1>
-	<img width="42%" style="float:left" src="assets/structure_after_tuning.svg" alt="">
-	<img width="40%" style="float:right" src="assets/results/PLOT_12/boxplot.svg" alt="">
-</section> -->
-
-
-<!--
-<section>
-
-	<section>
-		<h1>Training: learning rate and normalization</h1>
-		<img  style="margin-top:0%; float:left" width="80%" src="assets/structure_bnln.svg" alt="">
-	</section>
-
-	<section>
-		<h1>Training: learning rate and normalization</h1>
-		<img width="39%" style="margin-top:6%; float:left" src="assets/results/PLOT_13/loss.svg" alt="">
-		<ul style="margin-top:10%;">
-			<li>High learning rates don't work</li>
-		</ul>
-		<ul  style="margin-top:4%;">
-			<li>Keep default parameters for optim</li>
-		</ul>
-
-	</section>
-	<section>
-		<h1>Training: learning rate and normalization</h1>
-		<img width="49%" style="margin-top:6%; float:left" src="assets/results/PLOT_14/loss.svg" alt="">
-		<ul style="margin-top:6%;">
-			<li>batchnorm fails in our case
-			<ul>
-				<li>train batch: many songs</li>
-				<li>test batch: one song</li>
-			</ul>
-			<li style="margin-top:6%;">layernorm forces matching
-			<ul>
-				<li>test batch: normalized as in training</li>
-			</ul>
-			</li>
-		</ul>
-		<ul  style="margin-top:4%;">
-			<li>batchnorm behaves wildly, avoid it</li>
-		</ul>
-		<img width="20%" style="float:right" src="assets/true_story.svg" alt="">
-
-	</section>
-
-	<section>
-		<h1>Training: learning rate and normalization</h1>
-		<img width="75%" style="margin-top:6%; float:left" src="assets/results/PLOT_15/boxplot.svg" alt="">
-		<ul  style="margin-top:4%;">
-				<li>Improves isolation: better SIR</li>
-				<li>Adds distortion: worse SAR</li>
-		</ul>
-		<p>
-		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
-	</section>
-</section> -->
-
-<section>
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2>Standard approach</h2>
-		<ul>
-			<li>imagine to learn $Y = \frac{model(X * \beta)}{\alpha}$ (UHL1)</li>
-			<li>if we use normalization layers, our target magnitude is wrong</li>
-			<li>Pros: little overfitting, learns quickly (> 5dB)</li>
-			<li>Cons: hard to improve performance when true magnitude is required (tacotron) (</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2>...if you apply instance norm</h2>
-		<img width="80%" src="assets/loss_instance_norm.png" alt="">
-	</section>
-
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2>Lets learn the real magnitude</h2>
-		<img width="80%" src="assets/loss_realmagnitude.png" alt="">
-
-		<ul>
-			<li>We changed one line of code: $Y = model(X) \cdot X$</li>
-			<li>Performance, we lost ~2dB SDR</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2>Lets learn the real magnitude</h2>
-		<img width="80%" src="assets/loss_regularized.png" alt="">
-
-		<ul>
-			<li>we added random excerpts, more patience</li>
-			<li>introduce fixed learning rate decay (120 epochs)</li>
-			<li>back to 5.6 dB SDR</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2>Select the best model</h2>
-		<img width="80%" src="assets/loss_umxselection.png" alt="">
-	
-		<ul>
-			<li>add data augmentations and dynamically mix the sources together</li>
-			<li>take sources from random tracks</li>
-			<li>add weight decay</li>
-			<li>increase dropout rate</li>
-			<li>schedule learning rate decay dynamically on plateeua (*0.1)</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2>The final model (<code>UMX</code>)</h2>
-		<img width="80%" src="assets/loss_umx.png" alt="">
-	</section>
-
-	<section>
-		<h1>Predicting True Magnitudes</h1>
-		<h2><code>UMX-Pro</code></h2>
-		<img width="80%" src="assets/loss_umxpro.png" alt="">
-	</section>
-
-</section>
-
-<section>
-	<section>
-		<h1>The open-unmix (UMX) model</h1>
-		<h2>A baseline discriminative model for music separation</h2>
-		<img  style="margin-top:10%; float:left" width="100%" src="assets/UMX1.svg" alt="">
-		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
-		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
-	</section>
-	<section>
-		<h1>The open-unmix (UMX) model</h1>
-		<h2>A baseline discriminative model for music separation</h2>
-		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX2.svg" alt="">
-		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
-		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
-	</section>
-	<section>
-		<h1>The open-unmix (UMX) model</h1>
-		<h2>A baseline discriminative model for music separation</h2>
-		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX3.svg" alt="">
-		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
-		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
-	</section>
-	<section>
-		<h1>The open-unmix (UMX) model</h1>
-		<h2>A baseline discriminative model for music separation</h2>
-		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX4.svg" alt="">
-		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
-		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
-	</section>
-	<section>
-		<h1>The open-unmix (UMX) model</h1>
-		<h2>A baseline discriminative model for music separation</h2>
-		<img  style="margin-top:10%; float:left" width="160%" src="assets/UMX.svg" alt="">
-		<!-- <img width="47%" style="float:left" src="assets/results/PLOT_19/boxplot.svg" alt="">
-		<i style="position:absolute; right:10%; bottom:10%" class="fa fa-headphones"></i> -->
-	</section>
-</section>
-
-<section>
-	<section>
-		<h1>Training: regularization with dropout</h1>
-		<img  style="margin-top:5%; float:left" width="30%" src="assets/dropout.gif" alt="">
-		<ul style="margin-top:5%;">
-			<li>Parts of the net randomly set to 0</li>
-			<li>No unit should be critical: <i>regularization</i></li>
-			<li>Probabilistic interpretation</li>
-		</ul>
-		<h6 style="margin-top:30%; color:gray">
-			N Srivastava, et al. "Dropout: a simple way to prevent neural networks from overfitting". JMLR. (2014) 15(1), 1929-1958.
-		</h6>
-	</section>
-
-	<section>
-		<h1>Training: regularization with dropout</h1>
-		<img width="40%" style="margin-top:6%; float:left" src="assets/results/PLOT_16/loss.svg" alt="">
-		<ul style="margin-top:6%;">
-			<li>Regularization makes things worse</li>
+			<li>The model now learns how to mask the mixture: scale should be good</li>
 		</ul>
 	</section>
 </section>
 
 <section>
 	<section>
-		<h1>Training: data augmentation</h1>
-		<img width="70%" style="float:center" src="assets/sample_overlap.svg" alt="">
-		<ul style="margin-top:5%;">
-			<li>Basic augmentation: overlap samples within each track</li>
-			<li>There are more advanced strategies</li>
-		</ul>
-		<h6 style="margin-top:10%; color:gray">
-			S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." (2017) ICASSP.
-		</h6>
+		<style>
+			.container{display: flex;}
+			.col_umx_l{flex: 1.5;}
+			.col_umx_r{flex: 3;}
+		</style>
+		<h1>Training the final version</h1>
+		<div class="container">
+			<div class="col_umx_l">
+				<img  width="80%" src="assets/UMX_vert.svg" alt="">
+			</div>
+			<div class="col_umx_r">
+				<img width="100%" src="assets/loss_realmagnitude.png" alt="">
+				<ul>
+					<li>Training goes <font color="red">wrong</font>, strong overfit</li>
+					<li>Performance drop of ~2 dB !!</li>
+					<p>
+					<li class="fragment" style="color:red">Masking: training set too easy to remember?</li>
+					<div class="fragment">$\Rightarrow$ We need to fight overfitting</div>
+				</ul>
+			</div>
+		</div>
 	</section>
-
 	<section>
-		<h1>Training: data augmentation</h1>
-		<img width="49%" style="margin-top:6%; float:left" src="assets/results/PLOT_18/boxplot.svg" alt="">
-		<ul  style="margin-top:10%;">
-			<li>Basic augmentation helps a bit (0.5dB)</li>
-		</ul>
-		<!-- TAKE HOME -->
-		<ul  style="margin-top:4%;">
-			<li>Not shown: new tracks are better!</li>
-		</ul>
+		<h1>Fighting overfitting</h1>
+		<div class="container">
+			<div class="col_umx_l">
+				<img  width="80%" src="assets/UMX_vert.svg" alt="">
+			</div>
+			<div class="col_umx_r">
+				<img width="100%" src="assets/loss_regularized.png" alt="">
+				<ul>
+					<li>Random excerpts from tracks, higher patience</li>
+					<li>Fixed learning rate decay (120 epochs)</li>
+					<p>
+					$\Rightarrow$ <font color="green">Back to 5.6 dB </font></li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	<section>
+		<h1>Final tuning</h1>
+		<div class="container">
+			<div class="col_umx_l">
+				<img  width="80%" src="assets/UMX_vert.svg" alt="">
+			</div>
+			<div class="col_umx_r">
+				<img width="100%" src="assets/loss_umxselection.png" alt="">
+				<ul>
+					<li>Add data augmentations + random mixing</li>
+					<li>Take sources from random tracks</li>
+					<li>Add weight decay</li>
+					<li>Increase dropout rate</li>
+					<li>Learning rate decay on plateau ($\times 0.1$)</li>
+					<li>Select the best of several seeds</li>
+				</ul>
+			</div>
+		</div>
+	</section>
+	<section>
+		<h1><code>open-unmix</code>: final model (<code>UMX</code>)</h1>
+		<div class="container">
+			<div class="col_umx_l">
+				<img  width="80%" src="assets/UMX_vert.svg" alt="">
+			</div>
+			<div class="col_umx_r">
+				<img width="100%" src="assets/loss_umx.png" alt="">
+				<p>
+				$\Rightarrow$ <font color="green">Reach 6.3 dB vocals SDR on MUSDB18</font>
+			</div>
+		</div>
+	</section>
+	<section>
+		<h1>Spoiler: final model with <font color="red">much</font> more data (<code>UMXpro</code>)</h1>
+		<div class="container">
+			<div class="col_umx_l">
+				<img  width="80%" src="assets/UMX_vert.svg" alt="">
+			</div>
+			<div class="col_umx_r">
+				<img width="100%" src="assets/loss_umxpro.png" alt="">
+				<p>
+				$\Rightarrow$ <font color="green">Reach 6.3 dB vocals SDR on MUSDB18</font>
+			</div>
+		</div>
 	</section>
 </section>
-
-<!-- <section>
-	<section>
-		<h1>Training: spectrogram quality</h1>
-		<ul>
-			<li>Introducing musmag dataset</li>
-			<li>norbert</li>
-		</ul>
-	</section>
-
-	<section>
-		<h1>Training: spectrogram quality</h1>
-		o Performance comparison
-	</section>
-</section> -->
-
 
 <!-- TESTING -->
 <section>
@@ -1572,7 +1342,6 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		<li>Mono filter tricks</li>
 		<li>Multichannel Gaussian model</li>
 		<li>The multichannel Wiener filter</li>
-		<li>Testing: evaluation</li>
 	</ul>
 </section>
 
@@ -1613,6 +1382,11 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		</ul>
 		<p>
 		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
+	</section>
+
+	<section>
+		<h1>Testing: mono filter tricks</h1>
+		<h2>Demo</h2>
 	</section>
 </section>
 
@@ -1703,30 +1477,10 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 </section>
 
 <section>
-	<section>
-		<h1>Testing: evaluation</h1>
-		<img width="100%" style="float:left" src="assets/test_eval_settings.svg" alt="">
-	</section>
-
-	<section>
-		<h1>Testing: evaluation</h1>
-		<img width="55%" style="float:left" src="assets/results/test_boxplot.svg" alt="">
-		<ul>
-			<li>Iterations improve SIR <p>
-			$\Rightarrow$ greatly reduces interferences</li>
-			<li>Iterations worsen SAR<p>
-			$\Rightarrow$ introduces distortion</li>
-			<li>logit has good SIR<p>
-				$\Rightarrow$ cheap interference reduction</li
-		</ul>
-		<img width="40%" style="float:left" src="assets/results/test_boxplot_legend.svg" alt="">
-	</section>
-
-	<section>
-		<h1>Testing: evaluation</h1>
-		<img width="15%" style="position:absolute; right:1%; top:5%" src="assets/cherry.svg" alt="">
-		<img width="100%" style="margin-top:10%; float:left" src="assets/results/boxplot_proposed.svg" alt="">
-	</section>
+	<h1>Hands on testing tricks with <code>open-unmix</code></h1>
+	outline of the handson<p>
+	boxplots if available<p>
+	players
 </section>
 
 <section>
@@ -1744,83 +1498,85 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 <section>
 	<section>
 		<h1>Conclusion: the open source unmix</h1>
+		<h6 style="margin-top:0%;color:gray">
+			F. Stöter et al, "Open-Unmix - A reference implementation for audio source separation", JOSS 2019.
+		</h6>
 		<img  style="margin-top:0%; float:left" width="100%" src="assets/boxplot_full.svg" alt="">
 	</section>
 
 	<section>
 		<h1>Conclusion: the open source unmix</h1>
-		<img style="margin-top:0%; float:left" width="58%" src="assets/pairwise_new.svg" alt="">
-	</section>
-
-	<section>
-		<h1>Conclusion: what was kept out</h1>
+		<h6 style="margin-top:0%;color:gray">
+			F. Stöter et al, "Open-Unmix - A reference implementation for audio source separation", JOSS 2019.
+		</h6>
+		<img style="margin-top:0%; float:left" width="54%" src="assets/pairwise_new.svg" alt="">
 		<ul>
-			<li>Exotic representations</li>
+			<li>State of the art performance
+				<p>$\Rightarrow$ 6.3 dB vocals SDR</li>
+			<li>Close to binary oracles!</li>
 		</ul>
-		<p>
-		<img width="22%" style="float:left" src="assets/crazy_vanilla.svg" alt="">
+		<img width="22%" style="margin-top:10%; float:right" src="assets/mission_accomplished.svg" alt="">
+	</section>
+</section>
+
+<section>
+	<h1>Conclusion: what was kept out</h1>
+	<h2>Exotic representations</h2>
 		<ul>
-			<li>Alternative structures
-				<ul>
-					<li>The convolutional neural network (CNN)</li>
-					<li>The U-NET</li>
-					<li>The MM-densenet</li>
-					<li>Deep clustering</li>
-				</ul>
+			<li>Scattering transforms, wavelets, etc.</li>
+			<li>End-to-end separation: wavenet, etc.
+				<div style="color:red">wave-U-net:  3.3 dB vocals SDR</div>
 			</li>
-			<li>Generative approaches
-				<ul>
-					<li>Generative adversarial nets</li>
-					<li>(Variational) auto encoders</li>
-				</ul>
-			</li>
-			<li>Deep clustering</li>
 		</ul>
-		<p>
+	<h2>Alternative structures</h2>
 		<ul>
-			<li>Full grid search over parameters (fund us!)</li>
-			<li>Advanced data augmentation (naive=+0.3dB SDR)</li>
+			<li>The convolutional neural network (CNN)</li>
+			<li>The U-NET</li>
+			<li>The MM-densenet</li>
 		</ul>
-	</section>
+	<h2>Deep clustering strategy</h2>
+	$\Rightarrow$ Not so common for music separation
+	<h2>Full grid search over parameters (fund us!)</h2>
+	<h2>Advanced data augmentation (naive=+0.3dB SDR)</h2>
+</section>
 
-	<section>
-		<h1>Conclusion: what is promising</h1>
-		<h2>More data</h2>
-		<ul>
-			<li>More data</li>
-			<li>Even more data</li>
-			<li>Did we mention more data?</li>
-		</ul>
-		<p>
-		<h2>New approaches</h2>
-		<ul>
-			<li>Structures with more parameters work better...</li>
-			<li>Better signal processing helps</li>
-		</ul>
-		<h2>Engineering</h2>
-		<ul>
-			<li>We got 3dB SDR improvement with no publishable contribution<p>
-			$\Rightarrow$ evaluating the real impact of a contribution is difficult</li>
-		</ul>
-	</section>
+<section>
+	<h1>Conclusion: what is promising</h1>
+	<h2>More data</h2>
+	<ul>
+		<li>More data</li>
+		<li>Even more data</li>
+		<li>Did we mention more data?</li>
+	</ul>
+	<p>
+	<h2>New approaches</h2>
+	<ul>
+		<li>Structures with more parameters work better...</li>
+		<li>Better signal processing helps</li>
+	</ul>
+	<h2>Engineering</h2>
+	<ul>
+		<li>We got 3dB SDR improvement with no publishable contribution<p>
+		$\Rightarrow$ evaluating the real impact of a contribution is difficult</li>
+	</ul>
+</section>
 
-	<section>
-		<h1>Conclusion: ending remarks</h1>
-		<ul>
-			<li>Convergence of signal processing, probability theory and DL</li>
-			<li>Learning with limited amount of data</li>
-			<li>Model long term dependency</li>
-			<li>Representation learning for sound and music</li>
-			<li>Exploiting knowledge domain, user interaction</li>
-			<li>Unsupervised learning ?</li>
-		</ul>
-		<p>
-		<h1>Resources</h1>
-		<ul>
-			<li>References and Software tools: <a href="https://sigsep.github.io">sigsep.github.io</a></li>
-			<li>SiSEC 2018 Website: <a href="https://sisec18.unmix.app">sisec18.unmix.app</a></li>
-		</ul>
-	</section>
+<section>
+	<h1>Conclusion: ending remarks</h1>
+	<ul>
+		<li>Convergence of signal processing, probability theory and DL</li>
+		<li>Learning with limited amount of data</li>
+		<li>Model long term dependency</li>
+		<li>Representation learning for sound and music</li>
+		<li>Exploiting knowledge domain, user interaction</li>
+		<li>Unsupervised learning ?</li>
+	</ul>
+	<p>
+	<h1>Resources</h1>
+	<ul>
+		<li>References and Software tools: <a href="https://sigsep.github.io">sigsep.github.io</a></li>
+		<li>SiSEC 2018 Website: <a href="https://sisec18.unmix.app">sisec18.unmix.app</a></li>
+	</ul>
 </section>
 
 			</div>
