@@ -984,16 +984,17 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<h2>Data augmentation</h2>
 	<ul>
 		<li>Artificially increase the size of the dataset</li>
+		<p>
 		<li>Active research topic
 			<ul style="color:gray">
 				<li>S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." (2017) ICASSP</li>
 				<li>A. Cohen-Hadria, et al. "Improving singing voice separation using Deep U-Net and Wave-U-Net with data augmentation."" arXiv 2019.
 			</ul>
 		</li>
-		<li>Overlap<p>
-			<img width="70%" style="float:center" src="assets/sample_overlap.svg" alt="">
-		</li>
-		<li>Random gains</li>
+		<p>
+		<li>Some simple ideas: overlapping excerpts, random mixing</li>
+		<img width="45%" style="float:center" src="assets/sample_overlap.svg" alt="">
+		<img width="50%" style="float:center" src="assets/sources_gain_augmentation.svg" alt="">
 	</ul>
 </section>
 
@@ -1481,14 +1482,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 </section>
 
 <section>
-	<h1>Outline</h1>
-	<h2>Conclusion</h2>
-	<ul>
-		<li>Resulting baseline</li>
-		<li>What was kept out</li>
-		<li>What is promising</li>
-		<li>Ending remarks</li>
-	</ul>
+	<h1>Conclusion</h1>
 </section>
 
 
@@ -1526,7 +1520,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		<ul>
 			<li>Scattering transforms, wavelets, etc.</li>
 			<li>End-to-end separation: wavenet, etc.
-				<div style="color:red">wave-U-net:  3.3 dB vocals SDR</div>
+				<div style="color:red"><i class="fas fa-exclamation-triangle"></i> wave-U-net:  3.3 dB vocals SDR</div>
 			</li>
 		</ul>
 	<h2>Alternative structures</h2>
@@ -1538,16 +1532,15 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<h2>Deep clustering strategy</h2>
 	$\Rightarrow$ Not so common for music separation
 	<h2>Full grid search over parameters (fund us!)</h2>
-	<h2>Advanced data augmentation (naive=+0.3dB SDR)</h2>
+	<h2>Advanced data augmentation</h2>
 </section>
 
 <section>
 	<h1>Conclusion: what is promising</h1>
-	<h2>More data</h2>
+	<h2>Scale</h2>
 	<ul>
-		<li>More data</li>
-		<li>Even more data</li>
-		<li>Did we mention more data?</li>
+		<li>More data helps immensely</li>
+		<li>Evaluate scalability of an idea / a model</li>
 	</ul>
 	<p>
 	<h2>New approaches</h2>
