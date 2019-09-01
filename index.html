@@ -30,15 +30,14 @@
 				<section id="cover" data-background="css/theme/img/background-red.jpg" data-background-repeat="no-repeat" data-background-size="cover" data-background-position="0 0" data-state="no-title-footer no-progressbar has-dark-background">
 					<h2 id="covertitle">Deep learning for music separation</h2>
 					<p id="coverauthors">
-						Fabian-Robert Stöter & Antoine Liutkus<br/>
+						Antoine Liutkus & Fabian-Robert Stöter<br/>
 						Inria and LIRMM, Montpellier<br/>
-
+						<p>
+							antoine.liutkus@inria.fr<br />
+						</p>
 						<p>
 							fabian-robert.stoter@inria.fr<br />
 							<i class="fab fa-twitter"></i>faroit
-						</p>
-						<p>
-							antoine.liutkus@inria.fr<br />
 						</p>
 
 					</p>
@@ -169,7 +168,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<li>A brief history of music separation</li>
 		<li>A starter on deep neural networks</li>
 		<li>Discriminative and generative separation</li>
-		<li><font color="red">Hands on using <code>open-unmix</code></font></li>
+		<li><font color="red">Hands on using pre-trained <code>open-unmix</code></font></li>
 		<p>
 		<li>Training a DNN</li>
 		<li>Audio datasets</li>
@@ -884,12 +883,15 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 <section>
-	<h1>Hands on using <code>open-unmix</code></h1>
-	<ul>
-		<li>Installation and imports</li>
-		<li>Separate MUSDB18 tracks</li>
-		<li>Compute scores and compare with SiSEC18</li>
+	<h1>Hands on using pre-trained <code>open-unmix</code></h1>
+	<ul style="margin-top:10%">
+		<li>Load the pre-trained <code>open-unmix</code></li>
+		<p>
+		<li>Separate on MUSDB7 track</li>
+		<p>
+		<li>Compute scores and compare with oracle</li>
 	</ul>
+	<p>
 </section>
 
 
@@ -997,9 +999,9 @@ An audio demo of the critical impact of engineering for the “same” system.
 			</ul>
 		</li>
 		<p>
-		<li>Some simple ideas: overlapping excerpts, random mixing</li>
+		<li>Some simple ideas: random excerpts, random sources gains</li>
 		<p>
-		<img width="45%" style="float:center; margin-top=4%" src="assets/sample_overlap.svg" alt="">
+		<img width="45%" style="float:center; margin-top=4%" src="assets/random_excerpts.svg" alt="">
 		<img width="50%" style="float:center; margin-top=4%" src="assets/sources_gain_augmentation.svg" alt="">
 	</ul>
 </section>
@@ -1106,7 +1108,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<img width="100%" style="float:left" src="assets/VariableSourcesTrackFolderDataset.svg" alt="">
 </section>
 
-<section>
+<!-- <section>
 	<h1>Audio datasets</h1>
 	<h2>Hierarchical sampling</h2>
 	<img width="40%" style="margin-top:8%; float:left" src="assets/audio_dataset.svg" alt="">
@@ -1158,27 +1160,31 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		<li>Unique tracks in batch</li>
 		<li>All samples per epoch</li>
 	</ul>
-</section>
+</section> -->
 
 <section>
-	<h1>Hands-on training with pytorch</h1>
-		<h2>Setting up</h2>
+	<h1>Hands-on training a discriminative model using pytorch</h1>
+		<h2>Data</h2>
 			<ul>
-				<li>imports</li>
-				<li>Load the MUSDB18 dataset</li>
+				<li>Create a simple MUSDB18 dataset, examples of samples</li>
+				<li>Compute statistics for scaler</li>
+				<li>Create the sampler</li>
+			</ul>
+		<h2>Model</h2>
+			<ul>
 				<li>Create a model, an optimizer</li>
 			</ul>
 		<h2>Training loop</h2>
 			<ul>
 				<li>Compute loss</li>
-				<li>Gradient descent</li>
+				<li>Back-propagation + gradient descent</li>
 			</ul>
-		<h2>Training tricks</h2>
+		<h2>UMX training tricks <a href=https://github.com/sigsep/open-unmix-pytorch/blob/master/train.py><i class="fab fa-github"></i>/sigsep/open-unmix-pytorch/train.py</a> </h2>
 			<ul>
 				<li>Learning-rate schedulers</li>
-				<li>Patience</li>
+				<li>Early stopping</li>
 			</ul>
-		<h2>Adapt for a SourceFolderDataset</h2>
+		<h2>Adapt to a SourceFolderDataset</h2>
 	</ul>
 </section>
 
@@ -1251,18 +1257,16 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX6.svg" alt="">
-		<ul  style="margin-top:5%">
-			<li class="fragment">We still observe wrong scaling</li>
-			<div class="fragment">$\Rightarrow$ It's difficult to  keep right scale without normalization</div>
-		</ul>
-		<div class="fragment" style="margin-top:2%;"><i class="far fa-lightbulb"></i> Use the model to predict a filter on the mixture!</div>
+		<div class="fragment" style="position:absolute; margin-bottom:-10%;bottom:0; left:0;"><i class="far fa-lightbulb"></i> Use the model to predict a filter on the mixture!</div>
 	</section>
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
-		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX.svg" alt="">
+		<img  style="margin-top:2%; float:left" width="160%" src="assets/UMX.svg" alt="">
 		<ul style="margin-top:1%;">
 			<li>The model now learns how to mask the mixture
-			<div class="fragment"><font color="green">$\Rightarrow$ Sources scales should be good</font></div></li>
+			<div class="fragment"><font color="green">$\Rightarrow$ Sources scales should be good</font></div>
+			<div class="fragment"><font color="green">$\Rightarrow$ Loss computed on spectrograms, not masks</font></div></li>
+			</li>
 		</ul>
 	</section>
 </section>
@@ -1283,7 +1287,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 				<img width="100%" src="assets/loss_realmagnitude.png" alt="">
 				<ul>
 					<li>Training goes <font color="red">wrong</font>, strong overfit</li>
-					<li>Performance drop of ~2 dB !!</li>
+					<li class="fragment">Performance drop of ~2 dB !!</li>
 				</ul>
 			</div>
 		</div>
@@ -1337,7 +1341,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 				After:
 				<img width="100%" src="assets/loss_regularized.png" alt="">
 				<ul>
-					<li>Random excerpts from tracks, higher patience</li>
+					<li>Random excerpts, higher patience</li>
 					<li>Fixed learning rate decay (120 epochs)</li>
 					<p>
 					$\Rightarrow$ <font color="green">Back to 5.6 dB </font></li>
@@ -1355,7 +1359,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 			<div class="col_umx_r">
 				<img width="100%" src="assets/loss_umxselection.png" alt="">
 				<ul>
-					<li>Add data augmentations + random mixing</li>
+					<li>Random sources gains, random stereo swapping</li>
 					<li>Take sources from random tracks</li>
 					<li>Add weight decay</li>
 					<li>Increase dropout rate</li>
@@ -1416,38 +1420,16 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 </section>
 
 <section>
-	<!-- <section>
-		<h1>Testing: mono filter tricks</h1>
-		<h2>The huge impact of epsilons</h2>
-		<ul>
-			<li>Flooring spectrograms gives: $mask=\frac{v_j+\epsilon}{\sum_{j'} v_j'+\epsilon}$</li>
-			<li>For small $v_j$: strong interferences</li>
-		</ul>
-		<p>
-		Always do: $mask=\frac{v_j}{\epsilon + \sum_{j'} v_j'}$
-		<ul>
-			<li>Player with first option and $\epsilon=1e-3$</li>
-			<li>Player with second option and $\epsilon=1e-3$</li>
-		</ul>
-	</section>
- -->
-	<section>
-		<h1>Testing: mono filter tricks</h1>
-		<h2>Logit filters</h2>
-		<img  style="margin-top:0%; float:left" width="50%" src="assets/logit_trick.svg" alt="">
-		<ul>
-			<li>If the mask is 0.8... just put 1</li>
-			<li>If the mask is 0.2... just put 0</li>
-			<li>Cheap interference reduction</li>
-		</ul>
-		<p>
-		<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
-	</section>
-
-	<section>
-		<h1>Testing: mono filter tricks</h1>
-		<h2>Demo</h2>
-	</section>
+	<h1>Testing: mono filter tricks</h1>
+	<h2>Logit filters</h2>
+	<img  style="margin-top:0%; float:left" width="50%" src="assets/logit_trick.svg" alt="">
+	<ul>
+		<li>If the mask is 0.8... just put 1</li>
+		<li>If the mask is 0.2... just put 0</li>
+		<li>Cheap interference reduction</li>
+	</ul>
+	<p>
+	<i style="position:absolute; right:2%; bottom:2%" class="fa fa-headphones"></i>
 </section>
 
 <section>
@@ -1537,10 +1519,39 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 </section>
 
 <section>
-	<h1>Hands on testing tricks with <code>open-unmix</code></h1>
-	outline of the handson<p>
+	<h1>The norbert package</h1>
+	<img  style="margin-top:2%; float:right" width="15%" src="assets/norbert.svg" alt="">
+	<h2>Installation</h2>
+	<ul>
+		<li><a href=https://github.com/sigsep/norbert><i class="fab fa-github"></i>/sigsep/norbert</a></li>
+		<li><code>pip install norbert</code></li>
+	</ul>
+	<h2>Usage</h2>
+	<ul>
+		<li>Easy computation of soft masks</li>
+		<li>Easy computation of optimal (stereo) Wiener filters</li>
+		<li>Expectation-maximization algorithm</li>
+		<li>Spectral subtraction</li>
+	</ul>
+
+	<pre class="python">
+		norbert.softmask(v, x, logit=None, eps=None)
+		norbert.wiener(v, x, iterations=1, use_softmask=True, eps=None)
+		norbert.expectation_maximization(y, x, iterations=2, verbose=0, eps=None)
+		norbert.contrib.residual_model(v, x, alpha=1)
+	</pre>
+</section>
+
+<section>
+	<h1>Hands on: inference with <code>open-unmix</code></h1>
+	<i class="fas fa-link"></i><a href=https://open.unmix.app>open.unmix.app</a>
+	<p>
+	<ul>
+		<li>Running MUSDB18 separation</li>
+		<li>Tuning test-time parameters</li>
+	</ul>
+
 	boxplots if available<p>
-	players
 </section>
 
 <section>
