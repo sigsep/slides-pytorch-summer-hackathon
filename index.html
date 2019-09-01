@@ -1003,14 +1003,14 @@ An audio demo of the critical impact of engineering for the “same” system.
 		<img width="50%" style="float:center; margin-top=4%" src="assets/sources_gain_augmentation.svg" alt="">
 	</ul>
 </section>
-
+<!--
 <section>
 	<h1>Discriminative training</h1>
 	<img  style="margin-top:5%; float:center" width="20%" src="assets/sample_supervised.svg" alt="">
-</section>
+</section> -->
 
 <section>
-	<h1>Discriminative training, in audio</h1>
+	<h1>Discriminative training</h1>
 	<img width="100%" style="float:center" src="assets/sample_supervised_temporal.svg" alt="">
 </section>
 
@@ -1068,11 +1068,18 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 
 <section>
 	<h1>Generative training: Generative Adversarial Networks</h1>
-	<img width="80%" style="margin-top:1%; float:left" src="assets/GAN_training.svg" alt="">
+	<h6 style="margin-top:2%; color:gray">
+		Y. Subakan et al. "Generative adversarial source separation", ICASSP 2018.
+	</h6>
+	<img width="75%" style="margin-top:1%; float:left" src="assets/GAN_training.svg" alt="">
+
 </section>
 <section>
 	<h1>Generative training: Variational Auto-Encoders</h1>
-	<img width="100%" style="margin-top:1%; float:left" src="assets/VAE_training.svg" alt="">
+	<h6 style="margin-top:2%; color:gray">
+		S. Leglaive et al. "A variance modeling framework based on variational autoencoders for speech enhancement" MLSP, 2018.
+	</h6>
+	<img width="90%" style="margin-top:1%; float:left" src="assets/VAE_training.svg" alt="">
 </section>
 
 <section>
@@ -1246,7 +1253,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX6.svg" alt="">
 		<ul  style="margin-top:5%">
 			<li class="fragment">We still observe wrong scaling</li>
-			<div class="fragment">$\Rightarrow$ It's difficult to  keep mix scale without normalization</div>
+			<div class="fragment">$\Rightarrow$ It's difficult to  keep right scale without normalization</div>
 		</ul>
 		<div class="fragment" style="margin-top:2%;"><i class="far fa-lightbulb"></i> Use the model to predict a filter on the mixture!</div>
 	</section>
