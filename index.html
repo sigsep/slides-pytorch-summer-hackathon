@@ -94,7 +94,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 <section>
 	<h1>Unmatched state of the art</h1>
 	<ul>
-		<li>Intense community-based evaluations
+		<li>Very active research community and evaluations
 		<ul>
 			<li>International campaigns: MIREX, SiSEC</li>
 			<li>Not-so-recent fact: <strong>separation with DNN works</strong></li>
@@ -124,22 +124,21 @@ An audio demo of the critical impact of engineering for the “same” system.
 
 <section>
 	<h1>Motivations of this tutorial</h1>
-	<ul>
-		<li>Understand source separation
+		<h2>Understand source separation</h2>
 		<ul>
 			<li>Signal processing aspects</li>
 			<li>Quick overview of the topic</li>
 			<li>Discriminative and generative methods</li>
-		</ul></li>
+		</ul>
 		<p>
-		<li>Understand deep neural nets
+		<h2>Understand deep neural nets</h2>
 		<ul>
 			<li>Fundamental models for static/temporal data</li>
 			<li>A starter on training</li>
 			<li>Models for audio</li>
-		</ul></li>
+		</ul>
 		<p>
-		<li>Python practice
+		<h2>Python practice</h2>
 		<ul>
 			<li>How to implement and train deep nets with Pytorch</li>
 			<li>Official release of <code>open-unmix</code> today!
@@ -152,6 +151,11 @@ An audio demo of the critical impact of engineering for the “same” system.
 	All slides and material available at:
 	<a href=https://github.com/sigsep><i class="fab fa-github"></i>/sigsep</a>
 </div>
+</section>
+
+<section>
+	<h1>What <code>open-unmix</code> can achieve</h1>
+	some players here
 </section>
 
 <section>
@@ -286,10 +290,11 @@ An audio demo of the critical impact of engineering for the “same” system.
 	E. Vincent et al. "Performance measurement in blind audio source separation."
 	IEEE TASLP 14.4 (2006): 1462-1469.
 	</h6>
-	<h2><img width="50px"src="assets/python.jpg" style="position:relative;left:0px; top:25px;" alt="">museval (BSSeval v4)</i></h2>
+	<h2><img width="50px"src="assets/python.jpg" style="position:relative;left:0px; top:25px;" alt="">museval (BSSeval v4)</h2>
 	<ul>
 		<li><strong>Better</strong> matching filters computed track-wise </li>
 		<li><strong>Faster</strong> 10x</li>
+		<li><code>pip install museval</code>, <a href=https://github.com/sigsep/sigsep-mus-eval><i class="fab fa-github"></i>/sigsep/sigsep-mus-eval</a></li>
 	</ul>
 	<h6 style="margin-top:2%; color:gray">
 	F. Stöter et al. "The 2018 Signal Separation Evaluation Campaign."
@@ -811,7 +816,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<ul style="margin-top:3%;">
 		<li>Directly get source from mixture</li>
 		<li>Straightforward inference</li>
-		<li>Requires paired mixtures for training</li>
+		<li>Trained on paired mixtures/sources</li>
 	</ul>
 </section>
 
@@ -829,7 +834,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<img width="48%" style="margin-top:5%; float:left" src="assets/generative_model.svg" alt="">
 	<ul style="margin-top:5%;">
 		<li>The model can transform random noise to realistic spectrograms</li>
-		<li>Training is done without mixtures</li>
+		<li>Training is done on sources only, without mixtures</li>
 	</ul>
 </section>
 
@@ -985,7 +990,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 	<ul>
 		<li>Artificially increase the size of the dataset</li>
 		<p>
-		<li>Active research topic
+		<li>An active research topic in audio
 			<ul style="color:gray">
 				<li>S. Uhlich, et al. "Improving music source separation based on deep neural networks through data augmentation and network blending." (2017) ICASSP</li>
 				<li>A. Cohen-Hadria, et al. "Improving singing voice separation using Deep U-Net and Wave-U-Net with data augmentation."" arXiv 2019.
@@ -993,8 +998,9 @@ An audio demo of the critical impact of engineering for the “same” system.
 		</li>
 		<p>
 		<li>Some simple ideas: overlapping excerpts, random mixing</li>
-		<img width="45%" style="float:center" src="assets/sample_overlap.svg" alt="">
-		<img width="50%" style="float:center" src="assets/sources_gain_augmentation.svg" alt="">
+		<p>
+		<img width="45%" style="float:center; margin-top=4%" src="assets/sample_overlap.svg" alt="">
+		<img width="50%" style="float:center; margin-top=4%" src="assets/sources_gain_augmentation.svg" alt="">
 	</ul>
 </section>
 
@@ -1024,7 +1030,7 @@ An audio demo of the critical impact of engineering for the “same” system.
 </section>
 
 	<section>
-		<h1>Discriminative training: the audio loss jungle</h1>
+		<h1>Discriminative training: the audio data-fit loss jungle</h1>
 			<img width="20%" style="float:left" src="assets/cost_function.svg" alt="">
 $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right)\right)$<p>
 	<img width="30%" style="float:right" src="assets/costfunction_jungle.gif" alt="">
@@ -1051,7 +1057,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	</section>
 
 	<section>
-		<h1>Discriminative training: the audio loss jungle</h1>
+		<h1>Discriminative training: the audio data-fit loss jungle</h1>
 		<img width="30%" style="float:center" src="assets/costfunctions_SDR.png" alt="">
 		<img width="30%" style="float:center" src="assets/costfunctions_SIR.png" alt="">
 		<img width="30%" style="float:center" src="assets/costfunctions_SAR.png" alt="">
@@ -1181,17 +1187,27 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX3.svg" alt="">
+		<ul style="margin-top:5%;">
+			<li>Input and output scaling are good for training
+			<div><font color=gray>S. Uhlich et al. "Deep neural network based instrument extraction from music." ICASSP 2015.</font></div></li>
+		</ul>
 	</section>
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX4.svg" alt="">
+		<ul style="margin-top:5%;">
+			<li>Skip-connections <font color=red>do not</font> increase expressive power, but good impact on training
+			<div><font color=gray>R. Gribonval et al. "Approximation spaces of deep neural networks." arXiv 2019.</font></div></li>
+		</ul>
+
 	</section>
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX5.svg" alt="">
 		<ul style="margin-top:5%">
-			<li class="fragment">Instance normalization removes dependency on mixture scale</li>
-			<li class="fragment">It makes the true target unreachable</li>
+			<li>Instance normalization removes dependency on mixture scale
+			<div><font color="green">$\Rightarrow$ It makes the model insensitive to mixture scale</font></div></li>
+			<li>This is our ISMIR'18 version</li>
 		</ul>
 	</section>
 
@@ -1201,7 +1217,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 			.col_in_l{flex: 1;}
 			.col_in_r{flex: 3;}
 		</style>
-		<h1>Training the instancenorm version</h1>
+		<h1>Training the ISMIR'18 version</h1>
 		<div class="container">
 			<div class="col_in_l">
 				<img  width="70%" src="assets/UMX5_vert.svg" alt="">
@@ -1212,8 +1228,8 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 					<li>Training goes well, no overfit</li>
 					<li>Good performance: 5.8 dB vocals SDR on MUSDB18</li>
 					<p>
-					<li class="fragment" style="color:red">But scale of source is wrong
-					$\Rightarrow$ problematic in some cases</li>
+					<li class="fragment" style="color:red">But scale of source is wrong!
+					<div>$\Rightarrow$ Problematic for spectral subtraction, direct synthesis...</div></li>
 				</ul>
 			</div>
 		</div>
@@ -1221,24 +1237,25 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX5.svg" alt="">
-		<ul>
-			<li>Let's replace instance normalization by batch normalization</li>
+		<ul style="margin-top:5%">
+			<li>Let's replace instance normalization by a classical batch normalization</li>
 		</ul>
 	</section>
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX6.svg" alt="">
-		<ul>
-			<li class="fragment">We still have scaling issues</li>
+		<ul  style="margin-top:5%">
+			<li class="fragment">We still observe wrong scaling</li>
 			<div class="fragment">$\Rightarrow$ It's difficult to  keep mix scale without normalization</div>
 		</ul>
-		<div class="fragment" style="margin-top:2%"><i class="far fa-lightbulb"></i> Use the model to predict a filter on the mixture</div>
+		<div class="fragment" style="margin-top:2%;"><i class="far fa-lightbulb"></i> Use the model to predict a filter on the mixture!</div>
 	</section>
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX.svg" alt="">
-		<ul>
-			<li>The model now learns how to mask the mixture: scale should be good</li>
+		<ul style="margin-top:1%;">
+			<li>The model now learns how to mask the mixture
+			<div class="fragment"><font color="green">$\Rightarrow$ Sources scales should be good</font></div></li>
 		</ul>
 	</section>
 </section>
@@ -1260,13 +1277,36 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 				<ul>
 					<li>Training goes <font color="red">wrong</font>, strong overfit</li>
 					<li>Performance drop of ~2 dB !!</li>
-					<p>
-					<li class="fragment" style="color:red">Masking: training set too easy to remember?</li>
-					<div class="fragment">$\Rightarrow$ We need to fight overfitting</div>
 				</ul>
 			</div>
 		</div>
 	</section>
+
+	<section>
+		<style>
+			.container{display: flex;}
+			.col_interp_l{flex: 2;}
+			.col_inter_r{flex: 1;}
+		</style>
+		<h1>What happened?!</h1>
+		<div class="container">
+			<div class="col_interp_l">
+				<img  style="margin-top:5%; float:left" width="90%" src="assets/panic.svg" alt="">
+			</div>
+			<div class="col_interp_r">
+				<ul style="margin-top:5%">
+					<li class="fragment" data-fragment-index="1">Masking version:</li>
+					<div class="fragment" data-fragment-index="1"><i class="fas fa-exclamation-triangle"></i> Training set too easy to remember?</div>
+					<p>
+					<li class="fragment">But <code>instancenorm</code> was working!</li>
+					<div class="fragment"><i class="far fa-lightbulb"></i> It was making the true source unreachable!</div>
+					<div class="fragment" style="color:green">$\Rightarrow$ Preventing overfitting</div>
+				</ul>
+			</div>
+		</div>
+		<img  class="fragment" style="margin-top:1%; float:right" width="60%" src="assets/fight.svg" alt="">
+	</section>
+
 	<section>
 		<h1>Fighting overfitting</h1>
 		<div class="container">
@@ -1274,6 +1314,20 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 				<img  width="80%" src="assets/UMX_vert.svg" alt="">
 			</div>
 			<div class="col_umx_r">
+				Before:
+				<img width="100%" src="assets/loss_realmagnitude.png" alt="">
+			</div>
+		</div>
+	</section>
+
+	<section>
+		<h1>Fighting overfitting</h1>
+		<div class="container">
+			<div class="col_umx_l">
+				<img  width="80%" src="assets/UMX_vert.svg" alt="">
+			</div>
+			<div class="col_umx_r">
+				After:
 				<img width="100%" src="assets/loss_regularized.png" alt="">
 				<ul>
 					<li>Random excerpts from tracks, higher patience</li>
@@ -1284,6 +1338,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 			</div>
 		</div>
 	</section>
+
 	<section>
 		<h1>Final tuning</h1>
 		<div class="container">
