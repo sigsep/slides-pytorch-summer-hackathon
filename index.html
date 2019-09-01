@@ -1217,9 +1217,6 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 			</div>
 		</div>
 	</section>
-</section>
-
-<section>
 	<section>
 		<h1>The <code>open-unmix</code> (UMX) story</h1>
 		<img  style="margin-top:5%; float:left" width="160%" src="assets/UMX5.svg" alt="">
@@ -1319,7 +1316,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		</div>
 	</section>
 	<section>
-		<h1>Spoiler: final model with <font color="red">much</font> more data (<code>UMXpro</code>)</h1>
+		<h1>Spoiler: final model with <font color="black">much</font> more data (<code>UMXpro</code>)</h1>
 		<div class="container">
 			<div class="col_umx_l">
 				<img  width="80%" src="assets/UMX_vert.svg" alt="">
@@ -1327,7 +1324,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 			<div class="col_umx_r">
 				<img width="100%" src="assets/loss_umxpro.png" alt="">
 				<p>
-				$\Rightarrow$ <font color="green">Reach 6.3 dB vocals SDR on MUSDB18</font>
+				$\Rightarrow$ <font color="green">Reach 7.5 dB vocals SDR on MUSDB18</font>
 			</div>
 		</div>
 	</section>
@@ -1501,6 +1498,7 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		<h6 style="margin-top:0%;color:gray">
 			F. Stöter et al, "Open-Unmix - A reference implementation for audio source separation", JOSS 2019.
 		</h6>
+
 		<img  style="margin-top:0%; float:left" width="100%" src="assets/boxplot_full.svg" alt="">
 	</section>
 
@@ -1511,9 +1509,12 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 		</h6>
 		<img style="margin-top:0%; float:left" width="54%" src="assets/pairwise_new.svg" alt="">
 		<ul>
-			<li>State of the art performance
-				<p>$\Rightarrow$ 6.3 dB vocals SDR</li>
+			<li>State of the art performance</li>
+				<div>$\Rightarrow$ 6.3 dB vocals SDR</div>
+			<p>
 			<li>Close to binary oracles!</li>
+			<p>
+			<li><a href=https://github.com/sigsep/open-unmix-pytorch><i class="fab fa-github"></i>/sigsep/open-unmix-pytorch</a></li>
 		</ul>
 		<img width="22%" style="margin-top:10%; float:right" src="assets/mission_accomplished.svg" alt="">
 	</section>
@@ -1553,14 +1554,19 @@ $loss=\sum_{b\in batch, f,t} d\left(Y_b\left(f,t\right),\hat{Y}_b\left(f,t\right
 	<ul>
 		<li>Structures with more parameters work better...</li>
 		<li>Better signal processing helps</li>
+		<li>Generative ideas, even if lagging behind in performance</li>
 	</ul>
 	<h2>Engineering</h2>
 	<ul>
-		<li>We got 3dB SDR improvement with no publishable contribution<p>
-		$\Rightarrow$ evaluating the real impact of a contribution is difficult</li>
+		<li>We got 3dB SDR improvement with no publishable contribution</li>
+		<div>$\Rightarrow$ evaluating the real impact of a contribution is difficult</div>
+		<li>Real-time / frontend separation</li>
 	</ul>
 </section>
 
+<section>
+	<h1>Conclusion: advertising <code>UMX-Pro</code></h1>
+</section>
 <section>
 	<h1>Conclusion: ending remarks</h1>
 	<ul>
